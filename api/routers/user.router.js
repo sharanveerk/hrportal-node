@@ -1,5 +1,12 @@
-const {createUser} = require("../controllers/users/user.controller");
+const {createUser, getUserById, userLogin} = require("../controllers/users/user.controller");
 const router = require("express").Router();
+// const collect = require('collect.js');
 
-router.post("/",createUser);
+// let collection = collect(User.createUser);
+// collection.dd();
+
+router.post("/", createUser);
+// router.get("/:id", getUserById);
+router.get("/login", userLogin);
+
 module.exports = router; 
