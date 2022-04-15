@@ -1,13 +1,9 @@
-// middleware/users.js
-
 const jwt = require("jsonwebtoken");
-const collect = require('collect.js');
 
 module.exports = {
   validateRegister: (req, res, next) => {
 
-    // let collection = collect(req.body.email.length);
-    // collection.dd();
+ 
     // username min length 3
     if (!req.body.email || req.body.email.length < 3) {
       return res.status(400).send({
@@ -35,7 +31,6 @@ module.exports = {
     next();
   },
 
-  // middleware/users.js
     isLoggedIn: (req, res, next) => {
         try {
             const token = req.headers.authorization.split(' ')[1];

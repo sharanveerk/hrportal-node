@@ -5,7 +5,7 @@ const config = require('../../../config/config');
 const collect = require('collect.js');
 // const bcrypt = require('bcrypt');
 const { NULL } = require("mysql/lib/protocol/constants/types");
-// const errorResponse = require("../../services/errorResponse.service");
+const errorResponse = require("../../services/errorResponse.service");
 const successResponse = require("../../services/successResponse.service");
 
 const domain = process.env.OFFICE_DOMAIN;
@@ -22,12 +22,9 @@ module.exports = {
             create(body,(err,results,token)=>{
 
                 if(err){ 
-                //   return  errorResponse.error;
-                    return res.status(500).json({
-                        statusCode:500,
-                        success:false,
-                        message:"Something went wrong"
-                    });
+              
+                    const message = "Something went wrong!";
+                    return errorResponse(res,500,false,message);
                 }
                 response = {};
                 response.name = body.name;
@@ -35,22 +32,20 @@ module.exports = {
                 response.email = body.email;
                 response.number = body.number;
                 response.token = token;
-
-                return res.status(201).json({
-                    statusCode:201,
-                    success:true,
-                    message:"success",
-                    data:response
-                });
+                const message = "Employee created successfully";
+                return successResponse(res,201,false,message,response);
+                // return res.status(201).json({
+                //     statusCode:201,
+                //     success:true,
+                //     message:"success",
+                //     data:response
+                // });
             });
         }else{
-            return res.status(500).json({
-                statusCode:500,
-                success:false,
-                message:"Something went wrong"
-            });
-        //    message = "Something went wrong";
-        //    return errorResponse.error(res,500,false,message);
+            
+           const message = "Mail id is not valid";
+           return errorResponse(res,401,false,message);
+           
         }
     },
     getUserById: (req,res) =>{
@@ -58,11 +53,9 @@ module.exports = {
         getUserByid(id, (err,results) => {
         
             if(err){
-                return res.status(500).json({
-                    statusCode:500,
-                    success:false,
-                    message:"something wnet wrong!"
-                });
+                const message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+               
             }
             return res.status(200).json({
                 statusCode:200,
@@ -79,11 +72,13 @@ module.exports = {
 
             userLogin(email,(err, results) => {
                 if(err){
-                    return res.status(500).json({
-                        statusCode:500,
-                        success:false,
-                        message:"Email does not exist!, Plese enter correct email"
-                    });
+                    const message = "Email does not exist!, Plese enter correct email";
+                    return errorResponse(res,500,false,message);
+                    // return res.status(500).json({
+                    //     statusCode:500,
+                    //     success:false,
+                    //     message:"Email does not exist!, Plese enter correct email"
+                    // });
                 }
                 if(results.length>0){
 
@@ -94,19 +89,23 @@ module.exports = {
                         data:results,
                     });
                 }else{
-                    return res.status(500).json({
-                        statusCode: 500,
-                        success:false,
-                        message:"something wnet wrong!"
-                    });
+                    const message = "Something went wrong!";
+                    return errorResponse(res,500,false,message);
+                    // return res.status(500).json({
+                    //     statusCode: 500,
+                    //     success:false,
+                    //     message:"something wnet wrong!"
+                    // });
                 }
             });
         }else{
-            return res.status(401).json({
-                ststusCode:401,
-                success: false,
-                message:"Please enter valid email"
-            });
+            const message = "Please enter valid email";
+            return errorResponse(res,401,false,message);
+            // return res.status(401).json({
+            //     ststusCode:401,
+            //     success: false,
+            //     message:"Please enter valid email"
+            // });
         }
     }
 };

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../../config/database');
 const {createUser} = require("../controllers/users/user.controller");
 const userMiddleware = require('../middleware/auth');
+const errorResponse = require("../services/errorResponse.service");
 const dateTime = require('node-datetime');
 const dt = dateTime.create();
 const created = dt.format('Y-m-d H:M:S')
@@ -22,18 +23,12 @@ router.post('/login', (req, res, next) => {
         // user does not exists
         if (err) {
           throw err;
-          return res.status(400).send({
-                statusCode:400,
-                success:false,
-                message:err,
-          });
+          return errorResponse(res,400,false,err);
         }
         if (!result.length) {
-          return res.status(401).send({
-              statusCode: 401,
-              success:false,
-              message: 'Username or password is incorrect!'
-          });
+          const message = "Email is incorrect!";
+          return errorResponse(res,401,false,message);
+         
         }
         // check password
         if (result) {
@@ -53,7 +48,6 @@ router.post('/login', (req, res, next) => {
                     created,
                     created
                 ],
-            //   `UPDATE users SET last_login = now() WHERE id = '${result[0].id}'`
             );
             return res.status(200).send({
                 statusCode:200,
@@ -63,11 +57,9 @@ router.post('/login', (req, res, next) => {
                 user: result[0]
             });
           }
-          return res.status(401).send({
-              statusCode:401,
-              success:false,
-              message: "Username or password is incorrect!"
-          });
+          const message = "Email is incorrect!";
+          return errorResponse(res,401,false,message);
+        
       }
     );
   });
