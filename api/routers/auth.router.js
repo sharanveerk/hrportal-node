@@ -13,13 +13,13 @@ const collect = require('collect.js');
 // let collection = collect('ddd');
 // collection.dd();
 
-router.post('/sign-up', userMiddleware.validateRegister, createUser);
+router.post('/sign-up', createUser);
 router.post('/login', (req, res, next) => {
     db.query(
       `SELECT * FROM users WHERE email = ?`,
         [req.body.email],
       (err, result) => {
-           
+        
         // user does not exists
         if (err) {
           throw err;
@@ -30,6 +30,7 @@ router.post('/login', (req, res, next) => {
           return errorResponse(res,401,false,message);
          
         }
+
         // check password
         if (result) {
             const token = jwt.sign({

@@ -13,7 +13,7 @@ const created = dt.format('Y-m-d H:M:S')
 module.exports = {
 
     create: (data,callback)=>{
-
+     
         pool.query(
             `insert into users(name,gender,email,phone,created_at,updated_at) values(?,?,?,?,?,?)`,
             [
@@ -29,8 +29,6 @@ module.exports = {
                 if(error){
                   return callback(error);
                 }
-                
-
                 const token = jwt.sign({
                     email: data.email,
                     userId: results.insertId
@@ -64,11 +62,25 @@ module.exports = {
             }
         );
     },
+
+    emailExist: (token ,id ,callback)=>{
+        
+       let check = pool.query(
+            `UPDATE user_tokens SET token = '${token}',updated_at = '${created}' WHERE user_id = '${id}'`,
+                
+            (error, results, fields) => {
+                if(error){
+                    return callback(error);
+                }
+                return callback(results);
+            }
+        );
+        // let collection = collect(check);
+        // collection.dd();
+    },
     userLogin: (data,callback)=>{
        
         const email = data.email;
-        // let collection = collect(data.items);
-        // collection.dd(collection);
         pool.query(
             `select * from users join user_tokens on users.id = user_tokens.user_id where email = ?`,
             [email],
