@@ -50,17 +50,22 @@ module.exports = {
         );
     },
 
-    getUserByid: (id,callback)=>{
+    checkIn: (id,status,callback)=>{
         pool.query(
-            `select * from users where id = ?`,
-            [id],
+            `insert into checkin_checkout(user_id,status) values(?,?)`,
+            [
+                id,
+                status,
+            ],
+            
             (error, results, fields) => {
-                if(error){
-                   return callback(error);
-                }
-                return callback(null, results[0]);
+                    if(error){
+                           return callback(error);
+                        }
+                        return callback(null, results);
             }
         );
+
     },
 
     emailExist: (token ,id ,callback)=>{

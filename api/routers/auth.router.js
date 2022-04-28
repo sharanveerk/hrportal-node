@@ -64,6 +64,7 @@ router.post('/login', (req, res, next) => {
       }
     );
   });
+  
   router.get('/secret-route', userMiddleware.isLoggedIn, (req, res, next) => {
     return res.status(200).send({
         statusCode:200,

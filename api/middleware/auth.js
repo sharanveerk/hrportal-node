@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const collect = require('collect.js');
 
 module.exports = {
   validateRegister: (req, res, next) => {
@@ -32,6 +33,7 @@ module.exports = {
   },
 
     isLoggedIn: (req, res, next) => {
+  
         try {
             const token = req.headers.authorization.split(' ')[1];
             
