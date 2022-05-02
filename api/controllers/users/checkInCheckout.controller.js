@@ -8,6 +8,10 @@ const { NULL } = require("mysql/lib/protocol/constants/types");
 const errorResponse = require("../../services/errorResponse.service");
 const successResponse = require("../../services/successResponse.service");
 const jwt = require('jsonwebtoken');
+// const acl = require('express-acl');
+// let collection = collect(acl);
+// collection.dd();
+
 
 module.exports = {
     
@@ -47,17 +51,3 @@ module.exports = {
     },
   
 };
-
-
-
-// (req, res, next) => {
-//     // let collection = collect('errorResponse');
-//     // collection.dd();
-//     // return checkIncheckoutController(req,res,req.userData)
-//     return res.status(200).send({
-//         statusCode:200,
-//         success:true,
-//         message: "Authorized!",
-//         data:req.userData
-//     });
-//   }
