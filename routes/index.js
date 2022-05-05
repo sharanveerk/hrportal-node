@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 });
 router.use('/api',authRouter);
 router.use('/api/checkin-checkout',checkinCheckout);
-router.use('/api/role-assign',assignRole);
+router.use('/api/admin',assignRole);
 // acl.config({
 //   //specify your own baseUrl
 //   baseUrl: '/api/check-acl'
