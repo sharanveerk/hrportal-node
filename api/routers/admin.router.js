@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {fetchAllUser,assignRole,editRole,removeRole,createRole,getAllRole,roleEdit,deleteRole,permissionStore,viewPermissionById,listPermission,editPermission,deletePermission} = require("../controllers/admin/assign_role.controller");
+const {fetchAllUser,assignRole,editRole,removeRole,createRole,getAllRole,roleEdit,deleteRole,permissionStore,viewPermissionById,listPermission,editPermission,deletePermission,storeAllowRolePermission,allowRolePermission,editAllowRolePermission,viewAllowRolePermission,deleteAllowRolePermission} = require("../controllers/admin/assign_role.controller");
 const collect = require('collect.js');
 const userMiddleware = require('../middleware/auth');
 // let collection = collect(User.createUser);
@@ -25,6 +25,10 @@ router.post('/permission/edit', userMiddleware.isAdmin, editPermission);
 router.delete('/permission/delete', userMiddleware.isAdmin, deletePermission);
 
 //Route allow role permisssion
-router.post('/',userMiddleware.isAdmin,allowPermissionRole);
+router.get('/allow-role-permission',userMiddleware.isAdmin,allowRolePermission);
+router.post('/allow-role-permission/store',userMiddleware.isAdmin,storeAllowRolePermission);
+router.post('/allow-role-permission/edit',userMiddleware.isAdmin,editAllowRolePermission);
+router.get('/allow-role-permission/view',userMiddleware.isAdmin,viewAllowRolePermission);
+router.delete('/allow-role-permission/delete',userMiddleware.isAdmin,deleteAllowRolePermission);
 
 module.exports = router; 

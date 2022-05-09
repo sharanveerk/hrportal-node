@@ -200,4 +200,76 @@ module.exports = {
             }
         );
     },
+    createAllowRolePermissionQuery: (body,callback)=>{
+        pool.query(
+            `insert into allow_role_permissions(role_id,permission_id,created_at,updated_at) values(?,?,?,?)`,
+            [
+                body.role_id,
+                body.permission_id,
+                created,
+                created
+            ],      
+            (error, results, fields) => {
+            
+                if(error){
+                    return callback(error);
+                }
+                return callback(null, results);
+            }
+        );
+    },
+    listAllowRolePermissionQuery: (callback)=>{
+        pool.query(
+            `select * from allow_role_permissions`,
+            
+            (error, results, fields) => {
+                  
+                if(error){
+                    return callback(error);
+                }
+                return callback(results);
+            }
+        );
+    },
+    updateAllowRolePermissionQuery: (body, callback)=>{
+        let id = body.id;
+        let roleId = body.role_id;
+        let permissionId = body.permission_id;
+        pool.query(
+            `UPDATE allow_role_permissions SET role_id = '${roleId}', permission_id='${permissionId}', updated_at='${created}' WHERE id = '${id}'`,
+            (error, results, fields) => {
+            
+                if(error){
+                    return callback(error);
+                }
+                return callback(results);
+            }
+        );
+    },
+
+    viewAllowRolePermissionQuery: (id,callback)=>{
+        pool.query(
+            `select * from allow_role_permissions where id = '${id}'`,
+            
+            (error, results, fields) => {
+                  
+                if(error){
+                    return callback(error);
+                }
+                return callback(results);
+            }
+        );
+    },
+    deleteAllowRolePermissionQuery: (id,callback)=>{
+        pool.query(
+            `DELETE FROM allow_role_permissions WHERE id = '${id}'`,
+            (error, results, fields) => {
+               
+                if(error){
+                    return callback(error);
+                }
+                return callback(results);
+            }
+        );
+    }
 };

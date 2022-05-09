@@ -6,7 +6,7 @@ const collect = require('collect.js');
 const { NULL } = require("mysql/lib/protocol/constants/types");
 const errorResponse = require("../../services/errorResponse.service");
 const successResponse = require("../../services/successResponse.service");
-const {getUserQuery,assignRoleQuery,updateRoleQuery,removeRoleQuery,createRoleQuery,getAllRoleQuery,queryUpdateRole,deleteRoleQuery,storePermissionQuery,getPermissionByIdQuery,listPermissionQuery,updatePermissionQuery,deletePermissionQuery} = require("../../services/admin.service");
+const {getUserQuery,assignRoleQuery,updateRoleQuery,removeRoleQuery,createRoleQuery,getAllRoleQuery,queryUpdateRole,deleteRoleQuery,storePermissionQuery,getPermissionByIdQuery,listPermissionQuery,updatePermissionQuery,deletePermissionQuery,createAllowRolePermissionQuery,listAllowRolePermissionQuery,updateAllowRolePermissionQuery,viewAllowRolePermissionQuery,deleteAllowRolePermissionQuery} = require("../../services/admin.service");
 const jwt = require('jsonwebtoken');
 
 // const acl = require('express-acl');
@@ -229,7 +229,7 @@ module.exports = {
                 if(results[0]){
                     deletePermissionQuery(id, (results,err)=>{
                         if(err){
-                            const message = "Something went wrong!"
+                            let message = "Something went wrong!"
                             return errorResponse(res,500,false,message);
                         }
                         return res.status(200).json({   
@@ -239,11 +239,84 @@ module.exports = {
                         });
                     });
                 }else{
-                    const message = "Permission id does not exist!";
+                    let message = "Permission id does not exist!";
                     return errorResponse(res,500,false,message);
                 }
             }
         );
        
+    },
+    storeAllowRolePermission: (req,res)=>{
+        const body = req.body;
+        createAllowRolePermissionQuery(body, (err,results)=>{
+
+            if(err){
+              let message = "Something went wrong!";
+              return errorResponse(res,500,false,message);
+            }
+            return res.status(201).json({
+                statusCode:201,
+                success:true,
+                message: "Allow role permission has been created successfully."
+            });
+        });
+    },
+    allowRolePermission: (req,res)=>{
+        listAllowRolePermissionQuery((results,err)=>{
+            if(err){
+                let message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+            }
+            return res.status(201).json({
+                statusCode:201,
+                success:true,
+                message: "Allow role permission has been fetched successfully.",
+                data: results
+            });
+        });
+    },
+    editAllowRolePermission: (req, res)=>{
+        const body = req.body;
+        updateAllowRolePermissionQuery(body,(results,err)=>{
+            if(err){
+                let message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+            }
+            return res.status(201).json({
+                statusCode:201,
+                success:true,
+                message: "Allow role permission has been updated successfully."
+            });
+        });
+    },
+    viewAllowRolePermission: (req,res)=>{
+        const id = req.query.id;
+        viewAllowRolePermissionQuery(id,(results, err)=>{
+            if(err){
+                let message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+            }
+            return res.status(201).json({
+                statusCode:201,
+                success:true,
+                message: "Allow role permission has been fetched successfully.",
+                data: results
+            });  
+        })
+    },
+    deleteAllowRolePermission: (req,res)=>{
+        const id = req.query.id;
+        deleteAllowRolePermissionQuery(id,(results,err)=>{
+            if(err){
+                let message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+            }
+            return res.status(200).json({
+                statusCode:200,
+                success:true,
+                message: "Allow role permission has been delete successfully."
+            });  
+
+        })
     }
 };

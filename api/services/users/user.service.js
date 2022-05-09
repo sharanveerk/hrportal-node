@@ -1,4 +1,5 @@
 const pool = require("../../../config/database");
+const config = require("../../../config/config");
 const dateTime = require('node-datetime');
 const jwt = require('jsonwebtoken');
 
@@ -13,14 +14,15 @@ const created = dt.format('Y-m-d H:M:S')
 module.exports = {
 
     create: (data,callback)=>{
-     
+  
         pool.query(
-            `insert into users(name,gender,email,phone,created_at,updated_at) values(?,?,?,?,?,?)`,
+            `insert into users(name,gender,email,phone,firebase_token,created_at,updated_at) values(?,?,?,?,?,?,?)`,
             [
                 data.name,
                 data.gender,
                 data.email,
                 data.number,
+                data.firebase_token,
                 created,
                 created
             ],
@@ -29,9 +31,26 @@ module.exports = {
                 if(error){
                   return callback(error);
                 }
+
+                configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
+                configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
+                var roleType = '';
+
+                switch (data.email) {
+                    case configSuperAdminEmail1:
+                        var roleType = "superAdmin";
+                        break;
+                    case configSuperAdminEmail2:
+                        var roleType = "superAdmin";
+                        break;
+                    default:
+                        var roleType = "user";
+                        break;
+                }
                 const token = jwt.sign({
                     email: data.email,
-                    userId: results.insertId
+                    userId: results.insertId,
+                    role: roleType,
                   },
                   'SECRETKEY', {
                     expiresIn: '7d'
