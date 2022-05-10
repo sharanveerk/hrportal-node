@@ -99,8 +99,6 @@ module.exports = {
                 return callback(results);
             }
         );
-        // let collection = collect(check);
-        // collection.dd();
     },
     userLogin: (data,callback)=>{
        
@@ -117,5 +115,51 @@ module.exports = {
                 return callback(null, results);
             }
         );
+    },
+
+    userListQuery: (callback)=>{
+        pool.query(
+            `select * from users`,
+            (error,results,fields)=>{
+                // let collection = collect(results);
+                // collection.dd();
+                if(error){
+                    return callback(error)
+                }
+                return callback(results)
+            }
+        )
+    },
+    updateUserDetailsQuery: (data,callback)=>{
+
+
+        pool.query(
+            `insert into user_details(user_id,personal_email,phone,gender,date_of_birth,position,qualification,maritial_status,date_of_joining,blood_group,permanent_address,current_address,profile_image,document,status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [
+                data.user_id,
+                data.personal_email,
+                data.phone,
+                data.gender,
+                data.date_of_birth,
+                data.position,
+                data.qualification,
+                data.maritial_status,
+                data.date_of_joining,
+                data.blood_group,
+                data.permanent_address,
+                data.current_address,
+                data.profile_image,
+                data.document,             
+                1,             
+            ],
+            (error, results, fields) => {
+                // let collection = collect(data);
+                // collection.dd();
+                if(error){
+                    return callback(error);
+                }
+                return callback(null, results);
+            }
+        )
     }
 };

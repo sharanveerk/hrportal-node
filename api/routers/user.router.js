@@ -1,12 +1,8 @@
-const {createUser, getUserById, userLogin} = require("../controllers/users/user.controller");
 const router = require("express").Router();
-// const collect = require('collect.js');
+const middleware = require("../middleware/auth")
+const {createUser, getUserById, userLogin,userList,editUserDetails} = require("../controllers/users/user.controller");
 
-// let collection = collect(User.createUser);
-// collection.dd();
-
-// router.post("/", createUser);
-// router.get("/:id", getUserById);
-// router.get("/login", userLogin);
+router.get("/list", userList)
+router.post("/edit-user-details", middleware.isLoggedIn,editUserDetails)
 
 module.exports = router; 

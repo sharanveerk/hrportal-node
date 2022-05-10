@@ -1,6 +1,6 @@
 const { json } = require("express/lib/response");
 require('dotenv').config();
-const {create, getUserByid, userLogin,emailExist}= require("../../services/users/user.service");
+const {create,userLogin,emailExist,userListQuery,updateUserDetailsQuery}= require("../../services/users/user.service");
 const config = require('../../../config/config');
 const pool = require("../../../config/database");
 const collect = require('collect.js');
@@ -125,5 +125,55 @@ module.exports = {
             const message = "Please enter valid email";
             return errorResponse(res,401,false,message);
         }
-    }
+    },
+
+    /**
+     * @params {req} req
+     * @params {res} req
+     * @return users details
+     * @callback userListQuery
+     * @author sharanveer kannaujiya
+     */
+    userList: (req,res)=>{
+    
+        userListQuery( (results,error) => {
+        
+            if(error){
+                const message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+               
+            }
+            return res.status(200).json({
+                statusCode:200,
+                success:true,
+                message:"success",
+                data:results
+            });
+        });
+    },
+
+    /**
+     * @params {req} req
+     * @params {res} res
+     * @return success message when users details updated successfully 
+     * @callback updateUserDetailsQuery
+     * @author sharanveer kannaujiya
+     */
+
+     editUserDetails: (req,res)=>{
+         const data = req.body;
+        
+         updateUserDetailsQuery(data,(results,err)=>{
+             if(err){
+                const message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+             }
+             return res.status(201).json({
+                statusCode:201,
+                success:true,
+                message:"success",
+                data:results
+            })
+         })
+     }
 };
