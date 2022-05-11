@@ -1,6 +1,6 @@
 const { json } = require("express/lib/response");
 require('dotenv').config();
-const {create,userLogin,emailExist,userListQuery,updateUserDetailsQuery}= require("../../services/users/user.service");
+const {create,userLogin,emailExist,userListQuery,updateUserDetailsQuery,userIdExitQuery,userUpdateStatusQuery}= require("../../services/users/user.service");
 const config = require('../../../config/config');
 const pool = require("../../../config/database");
 const collect = require('collect.js');
@@ -156,24 +156,56 @@ module.exports = {
      * @params {req} req
      * @params {res} res
      * @return success message when users details updated successfully 
+     * I have use three conditions first is check user id is availble in user table or not, second is check user id is available already in user details tablle when available then update other wise insert record 
      * @callback updateUserDetailsQuery
      * @author sharanveer kannaujiya
      */
 
      editUserDetails: (req,res)=>{
-         const data = req.body;
-        
-         updateUserDetailsQuery(data,(results,err)=>{
-             if(err){
-                const message = "Something went wrong!";
-                return errorResponse(res,500,false,message);
+         const data = req.body
+         const userId = req.body.user_id
+         
+         //check user id exist or not 
+         userIdExitQuery(userId,(results,err)=>{
+             if(results){
+                 //update user details if user id does not exist in user details table then insert the recors otherwise update the the records
+                 updateUserDetailsQuery(data,(err,results)=>{
+                     if(err){
+                        const message = "Something went wrong!"
+                        return errorResponse(res,500,false,message)
+                     }
+                     return res.status(201).json({
+                        statusCode:201,
+                        success:true,
+                        message:"User details have been created successfully."
+                    })
+                 })
+             }else{
+                const message = "User id does not exist!"
+                return errorResponse(res,500,false,message)
              }
-             return res.status(201).json({
-                statusCode:201,
-                success:true,
-                message:"success",
-                data:results
-            })
          })
+     },
+     userUpdateStatus: (req,res)=>{
+         const body = req.body
+         const userId = req.userData.userId;
+         if(userId !== "" && body.project_name !== "" && body.working_hours !== "" && body.description !== ""){
+
+             userUpdateStatusQuery(body,userId,(err,results)=>{
+    
+                 if(err){
+                    const message = "Something went wrong!"
+                    return errorResponse(res,500,false,message)
+                 }
+                 return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message:"Status has been updated successfully."
+                })
+             })
+         }else{
+            const message = "Something went wrong!"
+            return errorResponse(res,500,false,message)
+         }
      }
 };
