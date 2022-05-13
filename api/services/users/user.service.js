@@ -30,26 +30,30 @@ module.exports = {
                 if(error){
                   return callback(error);
                 }
-
-                configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
-                configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
-                var roleType = '';
-
-                switch (data.email) {
-                    case configSuperAdminEmail1:
-                        var roleType = "superAdmin";
-                        break;
-                    case configSuperAdminEmail2:
-                        var roleType = "superAdmin";
-                        break;
-                    default:
-                        var roleType = "user";
-                        break;
+                var roleId = 0;
+                var configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
+                var configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
+                if(configSuperAdminEmail1 == data.email || configSuperAdminEmail2 == data.email){
+                    var roleId  = 1;
                 }
+
+                // switch (data.email) {
+                //     case configSuperAdminEmail1:
+
+                //         var roleType = "superAdmin";
+
+                //         break;
+                //     case configSuperAdminEmail2:
+                //         var roleType = "superAdmin";
+                //         break;
+                //     default:
+                //         var roleType = "";
+                //         break;
+                // }
                 const token = jwt.sign({
                     email: data.email,
                     userId: results.insertId,
-                    role: roleType,
+                    role: roleId,
                   },
                   'SECRETKEY', {
                     expiresIn: '7d'

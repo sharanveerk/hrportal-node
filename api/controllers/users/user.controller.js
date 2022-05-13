@@ -29,10 +29,17 @@ module.exports = {
                     (error, results, fields) => {
                         if(results[0]){
                             email = results[0].email;
-                           
+
+                            var roleId = 0;
+                            var configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
+                            var configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
+                            if(configSuperAdminEmail1 == results[0].email || configSuperAdminEmail2 == results[0].email){
+                                var roleId  = 1;
+                            }
                             const token = jwt.sign({
                                 email: email,
-                                userId: results[0].id
+                                userId: results[0].id,
+                                role: roleId,
                               },
                               'SECRETKEY', {
                                 expiresIn: '7d'
@@ -40,7 +47,6 @@ module.exports = {
                             );
                            let id = results[0].id;
                             emailExist(token, id,(err,result) => {
-                                
                                 
                                 response = {};
                                 response.name = results[0].name;

@@ -71,15 +71,17 @@ module.exports = {
               'SECRETKEY'
               );
               req.userData = decoded;
-              let authEmail = decoded.email;
-              let  configEmail = config.admin_emmail;
-              if(configEmail != authEmail){
+              let roleId = decoded.role;
+              // let collection = collect(decoded.role);
+              // collection.dd();
+              // let authEmail = decoded.email;
+              // let  configEmail = config.super_admin_email1;
+              // let  configEmail = config.super_admin_email1;
+              if(roleId !== 1){
                 return res.status(401).send({
                   msg: 'Not authorized!'
                 });
               }
-              // let collection = collect(adminEmail);
-              // collection.dd();
               next();
           } catch (err) {
             return res.status(401).send({

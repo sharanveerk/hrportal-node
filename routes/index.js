@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 const usersRouter = require("../api/routers/user.router")
 const authRouter = require("../api/routers/auth.router")
 const checkinCheckout = require("../api/routers/checkinCheckout.router")
-const assignRole = require("../api/routers/admin.router");
+// const assignRole = require("../api/routers/admin.router")
+const rbac = require("../api/routers/rbac.router")
 
 const acl = require('express-acl');
 /* GET home page. */
@@ -13,7 +14,7 @@ router.get('/', function(req, res, next) {
 });
 router.use('/api',authRouter);
 router.use('/api/checkin-checkout',checkinCheckout);
-router.use('/api/admin',assignRole);
+router.use('/api/rbac',rbac);
 
 router.use("/api/user",usersRouter);
 

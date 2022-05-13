@@ -18,96 +18,128 @@ module.exports = {
     
     fetchAllUser: (req,res) =>{
       
-        getUserQuery((err,results) => {
-            if(err){
-                const message = "Something went wrong!";
-                return errorResponse(res,500,false,message);
-            }else{
-                var array = [];
-                results.forEach(function(item) {
-                    array.push({id:item.id,name:item.name,email:item.email});
+        try {      
+            getUserQuery((err,results) => {
+                if(err){
+                    const message = "Something went wrong!";
+                    return errorResponse(res,500,false,message);
+                }else{
+                    var array = [];
+                    results.forEach(function(item) {
+                        array.push({id:item.id,name:item.name,email:item.email});
+                    });
+                    return res.status(200).json({
+                        statusCode:200,
+                        success:true,
+                        message:"Fetch users data successfully",
+                        data:array
+                    });
+                }
+            });
+        } catch (error) {
+
+            const message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    assignRole: (req,res) =>{
+
+        try {      
+            const body = req.body;
+            // const id = req.userData.userId;
+            
+            assignRoleQuery(body, (results,err) => {
+               
+                if(err){
+                    let message = "Something went wrong!";
+                    return errorResponse(res,500,false,message);
+                }
+                return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message:"Role has been assigned successfully."
                 });
+            });
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    editRole: (req,res) =>{
+
+        try {
+            
+            const body = req.query;
+            updateRoleQuery(body, (results,err)=>{
+                if(err){
+                    let message = "Something went wrong!";
+                    return errorResponse(res,500,false,message);
+                }
                 return res.status(200).json({
                     statusCode:200,
                     success:true,
-                    message:"Fetch users data successfully",
-                    data:array
+                    message: "data has been fetched.",
+                    data:results
                 });
-            }
-        });
-    },
-    assignRole: (req,res) =>{
-        const body = req.body;
-        // const id = req.userData.userId;
-        
-        assignRoleQuery(body, (results,err) => {
-           
-            if(err){
-                const message = "Something went wrong!";
-                return errorResponse(res,500,false,message);
-            }
-            return res.status(201).json({
-                statusCode:201,
-                success:true,
-                message:"Role has been assigned successfully."
             });
-        });
-    },
-    editRole: (req,res) =>{
-        const body = req.query;
-        updateRoleQuery(body, (results,err)=>{
-            if(err){
-                const message = "Something went wrong!";
-                return errorResponse(res,500,false,message);
-            }
-            return res.status(200).json({
-                statusCode:200,
-                success:true,
-                message: "data has been fetched.",
-                data:results
-            });
-        });
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
     },
 
     removeRole: (req,res)=>{
-        const id = req.query.id;
-        removeRoleQuery(id, (results,err)=>{
-            if(err){
-                const message = "Something went wrong!";
-                return errorResponse(res,500,false,message);
-            }
-            return res.status(201).json({
-                statusCode:201,
-                success:true,
-                message: "Role has been remove successfully.",
+        try {
+            
+            const id = req.query.id;
+            removeRoleQuery(id, (results,err)=>{
+                if(err){
+                    let message = "Something went wrong!";
+                    return errorResponse(res,500,false,message);
+                }
+                return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message: "Role has been remove successfully.",
+                });
             });
-        });
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
     },
     createRole: (req,res)=>{
-        const body = req.body;
 
-        pool.query(
-            `select * from roles where name = '${body.name}'`,
-            (error, results, fields) => {  
-                
-                if(results[0]){
-                    const message = "Role has been  already created!";
-                    return errorResponse(res,500,false,message);
-                }else{
-                    createRoleQuery(body, (err,results)=>{
-                        if(err){
-                            const message = "Something went wrong!";
-                            return errorResponse(res,500,false,message);
-                        }
-                        return res.status(201).json({
-                            statusCode:201,
-                            success:true,
-                            message: "Role has been created successfully.",
+        try {
+            
+            const body = req.body;
+    
+            pool.query(
+                `select * from roles where name = '${body.name}'`,
+                (error, results, fields) => {  
+                    
+                    if(results[0]){
+                        const message = "Role has been  already created!";
+                        return errorResponse(res,500,false,message);
+                    }else{
+                        createRoleQuery(body, (err,results)=>{
+                            if(err){
+                                const message = "Something went wrong!";
+                                return errorResponse(res,500,false,message);
+                            }
+                            return res.status(201).json({
+                                statusCode:201,
+                                success:true,
+                                message: "Role has been created successfully.",
+                            });
                         });
-                    });
+                    }
                 }
-            }
-        );
+            );
+        } catch (error) {
+            const message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
     },
     getAllRole: (req,res)=>{
         getAllRoleQuery((results,err)=>{
