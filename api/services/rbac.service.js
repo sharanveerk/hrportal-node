@@ -12,6 +12,15 @@ const { NULL } = require("mysql/lib/protocol/constants/types");
 
 module.exports = {
 
+    /**
+     * Role functionality services start here 
+     * @param {body} body 
+     * @param {callback} callback
+     * @returns message 
+     * store the role data in databse 
+     * @author sharanveer kannaujiya 
+     */
+
     createRoleQuery: (body, callback)=>{
         rbacModule.storeRoleQuery(body,(err,results)=>{
             if(err){
@@ -54,6 +63,23 @@ module.exports = {
         })
     },
 
+    roleStatusUpdate: (data)=>{
+        return new Promise((resolver,reject)=>{
+            rbacModule.viewByIdQuery(data.id, (err,results)=>{
+                if(results == null){
+                    return reject(err)
+                }else{
+                    rbacModule.roleStatusUpdateQuery(data, (err,results)=>{
+                        if(err){
+                            return reject(err)
+                        }
+                        return resolver(results)
+                    })
+                }
+            })
+        })
+
+    },
     deleteRoleQuery: (id, callback)=>{
         
         pool.query(
@@ -75,6 +101,72 @@ module.exports = {
             return callback(err,results)
         })
     },
+
+    /**
+     * Permission function service start here
+     * @param {data} async
+     * @returns results and err
+     * @author sharanveer kannaujiya 
+     */
+
+     storePermissionService: (body)=>{
+        // 
+         return  new Promise((resolver,reject)=>{
+             rbacModule.createPemissionQuery(body, (err, results)=>{
+               
+                 if(err){
+                     return reject(err)
+                 }
+                 return resolver(results)
+             })
+
+         })
+     },
+
+     permissionListService: ()=>{
+         return new Promise((resolver,reject)=>{
+            rbacModule.listPermissionQuery((err,results)=>{
+
+                if(err){
+                    return reject(err)
+                }
+                return resolver(results)
+            })
+         })
+     },
+     permissionViewService: (id)=>{
+         return new Promise((resolver,reject)=>{
+             rbacModule.viewPermissionQuery(id, (err,results)=>{
+                 if(err){
+                     return reject(err)
+                 }
+                 return resolver(results)
+             })
+         })
+
+     },
+
+     permissionUpdateService: (data)=>{
+         return new Promise((resolver,reject)=>{
+             rbacModule.updatePermissionQuery(data,(err,results)=>{
+                 if(err){
+                     return reject(err)
+                 }
+                 return resolver(results)
+             })
+         })
+     },
+     permissionChangeStatus: (data)=>{
+         return new Promise((resolver,reject)=>{
+             rbacModule.statusUpdatePermissionQuery(data,(err,results)=>{
+                 if(err){
+                     return reject(err)
+                 }
+                 return resolver(results)
+             })
+         })
+     },
+     
     getUserQuery: (callback)=>{
         pool.query(
             `select * from users`,
@@ -131,25 +223,25 @@ module.exports = {
         );
     },
 
-    storePermissionQuery: (body, callback)=>{
-        let parent = (body.parent) ? body.parent : 0;
-        pool.query(
-            `insert into permissions(permission_name,parent,created_at,updated_at) values(?,?,?,?)`,
-            [
-                body.permission_name,
-                parent,
-                created,
-                created
-            ],      
-            (error, results, fields) => {
+    // storePermissionQuery: (body, callback)=>{
+    //     let parent = (body.parent) ? body.parent : 0;
+    //     pool.query(
+    //         `insert into permissions(permission_name,parent,created_at,updated_at) values(?,?,?,?)`,
+    //         [
+    //             body.permission_name,
+    //             parent,
+    //             created,
+    //             created
+    //         ],      
+    //         (error, results, fields) => {
             
-                if(error){
-                    return callback(error);
-                }
-                return callback(null, results);
-            }
-        ); 
-    },
+    //             if(error){
+    //                 return callback(error);
+    //             }
+    //             return callback(null, results);
+    //         }
+    //     ); 
+    // },
     getPermissionByIdQuery: (id,callback)=>{
         pool.query(
             `select * from permissions where id = '${id}'`,
@@ -178,22 +270,7 @@ module.exports = {
             }
         );
     },
-    updatePermissionQuery: (body, callback)=>{
-        let permission_name = body.permission_name;
-        let parent = body.parent;
-        let id = body.id;
-        pool.query(
-            `UPDATE roles SET permission_name = '${permission_name}', parent='${parent}', updated_at='${created}' WHERE id = '${id}'`,
-            (error, results, fields) => {
-                // let collection = collect(results);
-                // collection.dd();
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
+  
     deletePermissionQuery: (id, callback)=>{
        
         pool.query(

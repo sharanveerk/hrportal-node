@@ -9,6 +9,15 @@ const successResponse = require("../../services/successResponse.service");
 const collect = require('collect.js');
 
 module.exports = {
+
+    /**
+     * 
+     * @param {req} req 
+     * @param {res} res 
+     * @returns successfull message when store query is coming in results otherwise return erro
+     * check role name exist or not 
+     * @author sharanveer kannaujiya
+     */
      createRole: (req,res)=>{
         try {
             const body = req.body;
@@ -97,8 +106,29 @@ module.exports = {
                 });  
             }else{
                 const message = "Something went wrong!";
+             return errorResponse(res,500,false,message);
+            }
+        } catch (error) {
+            const message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    changeStatus: async(req,res)=>{
+        try {
+            let data = req.body
+            const statusUpdateResponse = await rbacServices.roleStatusUpdate(data)
+            if(statusUpdateResponse){
+                return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message: "Role status has been updated successfully.",
+                });   
+            }else{
+                const message = "Something went wrong!";
                 return errorResponse(res,500,false,message);
             }
+           
+        
         } catch (error) {
             const message = "Something went wrong!";
             return errorResponse(res,500,false,message);

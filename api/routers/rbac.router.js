@@ -1,8 +1,9 @@
 const router = require("express").Router()
 const role = require("../controllers/rbac/role.controller")
+const permission = require("../controllers/rbac/permission.controller")
 const collect = require('collect.js')
 const userMiddleware = require('../middleware/auth')
-// let collection = collect(User.createUser);
+// let collection = collect(permission.storePermission);
 // collection.dd();
 
 
@@ -15,15 +16,15 @@ router.post('/role/store',userMiddleware.isAdmin,role.createRole)
 router.get('/role/list',userMiddleware.isAdmin,role.getAllRole)
 router.post('/role/edit',userMiddleware.isAdmin,role.roleEdit)
 router.get('/role/view',userMiddleware.isAdmin,role.viewRoleById)
-
+router.put('/role/update-status',userMiddleware.isAdmin,role.changeStatus)
 // router.delete('/role/delete',userMiddleware.isAdmin,deleteRole)
 
 // //Route for permissions 
-// router.post('/permission/store', userMiddleware.isAdmin, permissionStore);
-// router.get('/permission/get-by-id', userMiddleware.isAdmin, viewPermissionById);
-// router.get('/permission/list', userMiddleware.isAdmin, listPermission);
-// router.post('/permission/edit', userMiddleware.isAdmin, editPermission);
-// router.delete('/permission/delete', userMiddleware.isAdmin, deletePermission);
+router.post('/permission/store', userMiddleware.isAdmin, permission.storePermission)
+router.get('/permission/list', userMiddleware.isAdmin, permission.permissionList)
+router.get('/permission/get-by-id', userMiddleware.isAdmin, permission.permissionViewById)
+router.post('/permission/edit', userMiddleware.isAdmin, permission.permissionEdit)
+router.put('/permission/update-status', userMiddleware.isAdmin, permission.permissionUpdateStatus)
 
 // //Route allow role permisssion
 // router.get('/allow-role-permission',userMiddleware.isAdmin,allowRolePermission);
