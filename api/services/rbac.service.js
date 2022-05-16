@@ -166,7 +166,84 @@ module.exports = {
              })
          })
      },
-     
+
+     /**
+      * Role Permission service start here
+      * @param {body} async
+      * @returns error and results
+      * @author sharanveer kannaujiya 
+      */
+     storeRolePermissionService: (body)=>{
+      return new Promise((resolver,reject)=>{
+          rbacModule.createRolePermissionQuery(body,(err,results)=>{
+              if(err){
+                  return reject(err)
+              }
+              return resolver(results)
+          })
+      })
+     },
+     ListRolePermissionService: ()=>{
+        return new Promise((resolver,reject)=>{
+            rbacModule.listRolePermissionQuery((err,results)=>{
+                if(err){
+                    return reject(err)
+                }
+                return resolver(results)
+            })
+        })
+     },
+     viewRolePermissionService: (id)=>{
+        return new Promise((resolver,reject)=>{
+            rbacModule.viewRolePermissionQuery(id, (err,results)=>{
+                if(err){
+                    return reject(err)
+                }
+                return resolver(results)
+            })
+        })
+     },
+
+     editRolePermissionService: (data)=>{
+        return new Promise((resolver,reject)=>{
+            rbacModule.updateRolePermissionQuery(data, (err,results)=>{
+                if(err){
+                    return reject(err)
+                }
+                return resolver(results)
+            })
+        })
+     },
+     changeStatusRolePermissionService: (data)=>{
+         return new Promise((resolver,reject)=>{
+             rbacModule.updateStatusRolePermissionQuery(data, (err,results)=>{
+                //  let collection = collect(err);
+                //  collection.dd();
+                 if(err){
+                    return reject(err)
+                }
+                return resolver(results)
+            })
+        })
+     },
+     // End Role Permission service here
+
+
+
+
+
+    assignRoleToUserService: (body)=>{
+        return new Promise((resolver,reject)=>{
+            rbacModule.assignRoleToUserQuery(body,(err,results)=>{
+               if(err){
+                   return reject(err)
+               }
+               return resolver(results)
+            })
+        })
+        
+    },
+
     getUserQuery: (callback)=>{
         pool.query(
             `select * from users`,
@@ -223,25 +300,6 @@ module.exports = {
         );
     },
 
-    // storePermissionQuery: (body, callback)=>{
-    //     let parent = (body.parent) ? body.parent : 0;
-    //     pool.query(
-    //         `insert into permissions(permission_name,parent,created_at,updated_at) values(?,?,?,?)`,
-    //         [
-    //             body.permission_name,
-    //             parent,
-    //             created,
-    //             created
-    //         ],      
-    //         (error, results, fields) => {
-            
-    //             if(error){
-    //                 return callback(error);
-    //             }
-    //             return callback(null, results);
-    //         }
-    //     ); 
-    // },
     getPermissionByIdQuery: (id,callback)=>{
         pool.query(
             `select * from permissions where id = '${id}'`,
@@ -308,21 +366,6 @@ module.exports = {
             
             (error, results, fields) => {
                   
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-    updateAllowRolePermissionQuery: (body, callback)=>{
-        let id = body.id;
-        let roleId = body.role_id;
-        let permissionId = body.permission_id;
-        pool.query(
-            `UPDATE allow_role_permissions SET role_id = '${roleId}', permission_id='${permissionId}', updated_at='${created}' WHERE id = '${id}'`,
-            (error, results, fields) => {
-            
                 if(error){
                     return callback(error);
                 }

@@ -21,24 +21,29 @@ module.exports = {
      createRole: (req,res)=>{
         try {
             const body = req.body;
-            rbacServices.roleNameExist(body.name,(err,results)=>{
-                if(results){
-                    const message = "Role has been  already created!";
-                    return errorResponse(res,500,false,message);
-                }else{
-                    rbacServices.createRoleQuery(body, (err,results)=>{
-                        if(err){
-                            const message = "Something went wrong!";
-                            return errorResponse(res,500,false,message);
-                        }
-                        return res.status(201).json({
-                            statusCode:201,
-                            success:true,
-                            message: "Role has been created successfully.",
+            if(body.name !== ""){
+                rbacServices.roleNameExist(body.name,(err,results)=>{
+                    if(results){
+                        const message = "Role has been  already created!";
+                        return errorResponse(res,500,false,message);
+                    }else{
+                        rbacServices.createRoleQuery(body, (err,results)=>{
+                            if(err){
+                                const message = "Something went wrong!";
+                                return errorResponse(res,500,false,message);
+                            }
+                            return res.status(201).json({
+                                statusCode:201,
+                                success:true,
+                                message: "Role has been created successfully.",
+                            });
                         });
-                    });
-                }
-            })
+                    }
+                })
+            }else{
+                const message = "Name does not empty!";
+                return errorResponse(res,500,false,message);
+            }
         } catch (error) {
             const message = "Something went wrong!";
             return errorResponse(res,500,false,message);

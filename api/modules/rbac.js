@@ -163,6 +163,90 @@ function statusUpdatePermissionQuery(data, callback){
         }
     )
 }
+function createRolePermissionQuery(data, callback){
+    pool.query(
+        `insert into allow_role_permissions(role_id,permission_id,created_at,updated_at) values(?,?,?,?)`,
+        [
+            data.role_id,
+            data.permission_id,
+            created,
+            created
+        ],      
+        (error, results) => {
+            if(error){
+                return callback(error);
+            }
+            return callback(error, results);
+        }
+    );
+}
+
+function listRolePermissionQuery(callback){
+    pool.query(
+        `select * from allow_role_permissions`,
+        (error,results)=>{
+            if(error){
+                return callback(error)
+            }
+            return callback(error,results)
+        }
+    )
+}
+
+function viewRolePermissionQuery(id, callback){
+    pool.query(
+        `select * from allow_role_permissions where id = '${id}'`,
+        (error,results)=>{
+            if(error){
+                return callback(error)
+            }
+            return callback(error,results)
+        }
+    )
+}
+
+function updateRolePermissionQuery(body,callback){
+    let id = body.id;
+    let roleId = body.role_id;
+    let permissionId = body.permission_id;
+    pool.query(
+        `UPDATE allow_role_permissions SET role_id = '${roleId}', permission_id='${permissionId}', updated_at='${created}' WHERE id = '${id}'`,
+        (error, results) => {
+            if(error){
+                return callback(error);
+            }
+            return callback(error,results);
+        }
+    );
+}
+
+function updateStatusRolePermissionQuery(data, callback){
+    let id = data.id;
+    let value = data.value;
+    pool.query(
+        `UPDATE allow_role_permissions SET status = '${value}', updated_at='${created}' WHERE id = '${id}'`,
+        (error, results) => {
+            if(error){
+                return callback(error);
+            }
+            return callback(error,results);
+        }
+    );
+}
+function assignRoleToUserQuery(data,callback){
+    let userId = data.user_id;
+    let roleId = data.role_id;
+    pool.query(
+        `UPDATE users SET role = '${roleId}', updated_at='${created}' WHERE id = '${userId}'`,
+        (error, results) => {
+            if(error){
+                return callback(error);
+            }
+            return callback(error,results);
+        }
+    );
+}
+
 // let collection = collect(error);
 // collection.dd();
 module.exports = {
@@ -177,5 +261,11 @@ module.exports = {
     viewPermissionQuery,
     updatePermissionQuery,
     statusUpdatePermissionQuery,
+    createRolePermissionQuery,
+    listRolePermissionQuery,
+    viewRolePermissionQuery,
+    updateRolePermissionQuery,
+    updateStatusRolePermissionQuery,
+    assignRoleToUserQuery,
 
 }

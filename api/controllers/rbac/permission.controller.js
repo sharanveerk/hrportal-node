@@ -1,10 +1,9 @@
-const { json } = require("express/lib/response");
+const { json } = require("express/lib/response")
 const pool = require("../../../config/database")
 const config = require("../../../config/config")
-const jwt = require('jsonwebtoken');
 const rbacServices = require("../../services/rbac.service")
-const errorResponse = require("../../services/errorResponse.service");
-const successResponse = require("../../services/successResponse.service");
+const errorResponse = require("../../services/errorResponse.service")
+const successResponse = require("../../services/successResponse.service")
 
 const collect = require('collect.js');
 
@@ -66,7 +65,6 @@ module.exports = {
                 const message = "Something went wrong!";
                 return errorResponse(res,500,false,message); 
             }
-
         } catch (error) {
             const message = "Something went wrong!";
             return errorResponse(res,500,false,message); 
@@ -86,7 +84,6 @@ module.exports = {
                 const message = "Something went wrong!";
                 return errorResponse(res,500,false,message); 
             }
-
         } catch (error) {
             const message = "Something went wrong!";
             return errorResponse(res,500,false,message); 
@@ -108,10 +105,9 @@ module.exports = {
                 const message = "Something went wrong!";
                 return errorResponse(res,500,false,message); 
             }
-
         } catch (error) {
             const message = "Something went wrong!";
             return errorResponse(res,500,false,message); 
         }
-    }
+    },
 }
