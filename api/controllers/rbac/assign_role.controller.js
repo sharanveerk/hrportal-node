@@ -11,6 +11,7 @@ module.exports = {
 
     assignRoleToUser: async(req,res)=>{
         try {
+            
             let body = req.body
             if(body.role_id !== 0 && body.user_id !== 0){
                 const saveResponse = await rbacServices.assignRoleToUserService(body)
@@ -23,8 +24,7 @@ module.exports = {
                     });   
                 }else{
                     const message = "Something went wrong!";
-                    return errorResponse(res,500,false,message);
-                    
+                    return errorResponse(res,500,false,message); 
                 }
             }else{
                 const message = "role and permission name does not empty!";
@@ -35,13 +35,12 @@ module.exports = {
             return errorResponse(res,500,false,message);
         }
     },
-    editAssignRole: (req,res)=>{
+    editAssignRole: async(req,res)=>{
         try {
             let body = req.body
             if(body.role_id !== 0 && body.user_id !== 0){
                 const saveResponse = await rbacServices.assignRoleToUserService(body)
                 if(saveResponse){
-                   
                     return res.status(201).json({
                         statusCode:201,
                         success:true,
@@ -50,7 +49,6 @@ module.exports = {
                 }else{
                     const message = "Something went wrong!";
                     return errorResponse(res,500,false,message);
-                    
                 }
             }else{
                 const message = "role and permission name does not empty!";

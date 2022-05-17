@@ -2,7 +2,6 @@ const pool = require("../../../config/database");
 const config = require("../../../config/config");
 const dateTime = require('node-datetime');
 const jwt = require('jsonwebtoken');
-// const dateFormat = require('dateformat');
 const dt = dateTime.create();
 const collect = require('collect.js');
 const res = require("express/lib/response");
@@ -30,26 +29,12 @@ module.exports = {
                 if(error){
                   return callback(error);
                 }
-                var roleId = 0;
+                var roleId = 3;
                 var configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
                 var configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
                 if(configSuperAdminEmail1 == data.email || configSuperAdminEmail2 == data.email){
                     var roleId  = 1;
                 }
-
-                // switch (data.email) {
-                //     case configSuperAdminEmail1:
-
-                //         var roleType = "superAdmin";
-
-                //         break;
-                //     case configSuperAdminEmail2:
-                //         var roleType = "superAdmin";
-                //         break;
-                //     default:
-                //         var roleType = "";
-                //         break;
-                // }
                 const token = jwt.sign({
                     email: data.email,
                     userId: results.insertId,

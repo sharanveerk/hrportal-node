@@ -217,8 +217,6 @@ module.exports = {
      changeStatusRolePermissionService: (data)=>{
          return new Promise((resolver,reject)=>{
              rbacModule.updateStatusRolePermissionQuery(data, (err,results)=>{
-                //  let collection = collect(err);
-                //  collection.dd();
                  if(err){
                     return reject(err)
                 }
@@ -227,11 +225,14 @@ module.exports = {
         })
      },
      // End Role Permission service here
-
-
-
-
-
+     
+     /**
+      * 
+      * @param {body} body 
+      * @returns results or error by using Promises
+      * @author sharanveer kannaujiya
+      */
+     
     assignRoleToUserService: (body)=>{
         return new Promise((resolver,reject)=>{
             rbacModule.assignRoleToUserQuery(body,(err,results)=>{
@@ -243,162 +244,5 @@ module.exports = {
         })
         
     },
-
-    getUserQuery: (callback)=>{
-        pool.query(
-            `select * from users`,
-            (error, results, fields) => {  
-            
-                if(error){
-                  return  callback(error);
-                }
-                return callback(null, results);
-            }
-        );
-    },
-
-    assignRoleQuery: (data,callback)=>{
-        let id = data.id;
-        let roleName = data.role_name;
-        pool.query(
-            `UPDATE users SET role = '${roleName}' WHERE id = '${id}'`,
-            
-            (error, results, fields) => {
-                if(error){
-                    let collection = collect(error);
-                    collection.dd();
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-    updateRoleQuery: (data,callback)=>{
-        let id = data.id;
-        pool.query(
-            `select * from users where id = ?`,
-            [id],
-            (error, results, fields) => {
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-    removeRoleQuery: (id,callback)=>{
-
-        pool.query(
-            `UPDATE users SET role = NULL WHERE id = '${id}'`,
-            
-            (error, results, fields) => {
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-
-    getPermissionByIdQuery: (id,callback)=>{
-        pool.query(
-            `select * from permissions where id = '${id}'`,
-            
-            (error, results, fields) => {
-                    //    let collection = collect(results);
-                    // collection.dd();
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-    listPermissionQuery: (callback)=>{
-        pool.query(
-            `select * from permissions`,
-            
-            (error, results, fields) => {
-                    //    let collection = collect(results);
-                    // collection.dd();
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-  
-    deletePermissionQuery: (id, callback)=>{
-       
-        pool.query(
-            `DELETE FROM permissions WHERE id = '${id}'`,
-            (error, results, fields) => {
-               
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-    createAllowRolePermissionQuery: (body,callback)=>{
-        pool.query(
-            `insert into allow_role_permissions(role_id,permission_id,created_at,updated_at) values(?,?,?,?)`,
-            [
-                body.role_id,
-                body.permission_id,
-                created,
-                created
-            ],      
-            (error, results, fields) => {
-            
-                if(error){
-                    return callback(error);
-                }
-                return callback(null, results);
-            }
-        );
-    },
-    listAllowRolePermissionQuery: (callback)=>{
-        pool.query(
-            `select * from allow_role_permissions`,
-            
-            (error, results, fields) => {
-                  
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-
-    viewAllowRolePermissionQuery: (id,callback)=>{
-        pool.query(
-            `select * from allow_role_permissions where id = '${id}'`,
-            
-            (error, results, fields) => {
-                  
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-    deleteAllowRolePermissionQuery: (id,callback)=>{
-        pool.query(
-            `DELETE FROM allow_role_permissions WHERE id = '${id}'`,
-            (error, results, fields) => {
-               
-                if(error){
-                    return callback(error);
-                }
-                return callback(results);
-            }
-        );
-    },
-
 
 };

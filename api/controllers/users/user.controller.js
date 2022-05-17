@@ -30,7 +30,7 @@ module.exports = {
                         if(results[0]){
                             email = results[0].email;
 
-                            var roleId = 0;
+                            var roleId = 3;
                             var configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
                             var configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
                             if(configSuperAdminEmail1 == results[0].email || configSuperAdminEmail2 == results[0].email){
