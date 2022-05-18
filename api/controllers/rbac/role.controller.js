@@ -140,3 +140,17 @@ module.exports = {
         }
     }
 }
+
+
+function checkPermissions(userId){
+
+    rbacServices.checkPermission(userId, (err,results)=>{
+        // if(err){
+        //     let collection = collect("failed")
+        //     collection.dd()
+        // }
+        // let collection = collect('success')
+        // collection.dd()
+    })
+
+}

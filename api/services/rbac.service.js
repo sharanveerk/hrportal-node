@@ -203,7 +203,6 @@ module.exports = {
             })
         })
      },
-
      editRolePermissionService: (data)=>{
         return new Promise((resolver,reject)=>{
             rbacModule.updateRolePermissionQuery(data, (err,results)=>{
@@ -224,6 +223,7 @@ module.exports = {
             })
         })
      },
+
      // End Role Permission service here
      
      /**
@@ -232,7 +232,7 @@ module.exports = {
       * @returns results or error by using Promises
       * @author sharanveer kannaujiya
       */
-     
+
     assignRoleToUserService: (body)=>{
         return new Promise((resolver,reject)=>{
             rbacModule.assignRoleToUserQuery(body,(err,results)=>{
@@ -241,8 +241,46 @@ module.exports = {
                }
                return resolver(results)
             })
-        })
-        
+        })   
     },
-
+    /**
+     * check permission 
+     * @return role base permissions by role id
+     * @author sharanveer kannaujiya
+     */
+    //  checkPermissionService,
+    checkPermissionService: (userId,permissionName)=>{
+        return new Promise ((resolver,reject)=>{
+            pool.query(
+                `select role from users where id='${userId}' and status = 1`,
+                (error,results)=>{
+                    
+                    if(error){
+                        return reject(error)
+                    }
+                    let roleId = results[0].role
+                    rbacModule.getPermissionByRoleId(roleId, (prErr,prResults)=>{
+                        if(prErr){
+                            return reject(prErr)
+                        }
+                        rbacModule.checkPermission(permissionName,(pErr,pResults)=>{
+                         
+                            if(pResults == null){
+                                return reject(pErr)
+                            }
+                            var arr = prResults
+                            let pId  = pResults.id
+                            let result = arr.map(ele => ele.permission_id);
+                            let arrInCheck = result.includes(pId)
+                            if(arrInCheck){
+                                return resolver(pResults)
+                            }
+                        })
+                    })
+                }
+            )
+        })
+    },
 };
+
+

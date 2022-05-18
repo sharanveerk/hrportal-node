@@ -8,24 +8,22 @@ const res = require("express/lib/response");
 // let collection = collect(token);
 // collection.dd();
 
-const created = dt.format('Y-m-d H:M:S')
+var created = dt.format('Y-m-d H:M:S')
 module.exports = {
 
     create: (data,callback)=>{
   
         pool.query(
-            `insert into users(name,gender,email,phone,firebase_token,created_at,updated_at) values(?,?,?,?,?,?,?)`,
+            `insert into users(name,email,firebase_token,created_at,updated_at) values(?,?,?,?,?)`,
             [
                 data.name,
-                data.gender,
                 data.email,
-                data.number,
                 data.firebase_token,
                 created,
                 created
             ],
             (error,results,fields)=>{
-                
+               
                 if(error){
                   return callback(error);
                 }
@@ -77,10 +75,11 @@ module.exports = {
 
     emailExist: (token ,id ,callback)=>{
         
-       let check = pool.query(
+        pool.query(
             `UPDATE user_tokens SET token = '${token}',updated_at = '${created}' WHERE user_id = '${id}'`,
                 
             (error, results, fields) => {
+                
                 if(error){
                     return callback(error);
                 }

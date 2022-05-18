@@ -1,12 +1,14 @@
 const { json } = require("express/lib/response");
 require('dotenv').config();
-const {create,userLogin,emailExist,userListQuery,updateUserDetailsQuery,userIdExitQuery,userUpdateStatusQuery}= require("../../services/users/user.service");
+const userService = require("../../services/users/user.service");
+// const {create,userLogin,emailExist,userListQuery,updateUserDetailsQuery,userIdExitQuery,userUpdateStatusQuery}= require("../../services/users/user.service");
 const config = require('../../../config/config');
 const pool = require("../../../config/database");
 const collect = require('collect.js');
 const { NULL } = require("mysql/lib/protocol/constants/types");
 const errorResponse = require("../../services/errorResponse.service");
 const successResponse = require("../../services/successResponse.service");
+const rbacServices = require("../../services/rbac.service")
 const jwt = require('jsonwebtoken');
 const dateTime = require('node-datetime');
 const dt = dateTime.create();
@@ -23,13 +25,14 @@ module.exports = {
         const validateEmail = req.body.email.split('@');
         
         if(validateEmail[1] == domain){
-               
-                pool.query( `select * from users where email = ?`,
-                    [req.body.email],
+            if(body.name !== "" && body.firebase_token !== ""){
+
+                pool.query( `select * from users where email = '${req.body.email}' and name = '${req.body.name}'`,
+                    // [req.body.email,req.body.name],
                     (error, results, fields) => {
                         if(results[0]){
                             email = results[0].email;
-
+    
                             var roleId = 3;
                             var configSuperAdminEmail1 = config.super_admin_email1;       //"sharanveerk@bootesnull.com";
                             var configSuperAdminEmail2 = config.super_admin_email2;      //"sharan@bootesnull.com";
@@ -45,22 +48,19 @@ module.exports = {
                                 expiresIn: '7d'
                               }
                             );
-                           let id = results[0].id;
-                            emailExist(token, id,(err,result) => {
+                            let id = results[0].id;
+                            userService.emailExist(token, id,(err,result) => {
                                 
                                 response = {};
                                 response.name = results[0].name;
-                                response.gender = results[0].gender;
                                 response.email = results[0].email;
-                                response.number = results[0].phone;
                                 response.token = token;
                                 const message = "Employee created successfully";
                                 return successResponse(res,201,true,message,response);
-                                
                             });
                 
                         }else{
-                            create(body,(err,results,token)=>{
+                            userService.create(body,(err,results,token)=>{
                 
                                 if(err){ 
                               
@@ -69,9 +69,7 @@ module.exports = {
                                 }
                                 response = {};
                                 response.name = body.name;
-                                response.gender = body.gender;
                                 response.email = body.email;
-                                response.number = body.number;
                                 response.token = token;
                                 const message = "Employee created successfully";
                                 return successResponse(res,201,true,message,response);
@@ -80,16 +78,19 @@ module.exports = {
                         }
                     }
                 );
+            }else{
+                const message = "fields can not empty!";
+                return errorResponse(res,401,false,message);
+            }
         }else{
-            
-           const message = "Mail id is not valid";
+           const message = "Email id is not valid";
            return errorResponse(res,401,false,message);
            
         }
     },
     getUserById: (req,res) =>{
         const id = req.params.id;
-        getUserByid(id, (err,results) => {
+        userService.getUserByid(id, (err,results) => {
         
             if(err){
                 const message = "Something went wrong!";
@@ -109,7 +110,7 @@ module.exports = {
         const validateEmail = email.email.split('@');
         if(validateEmail[1] == domain){
 
-            userLogin(email,(err, results) => {
+            userService.userLogin(email,(err, results) => {
                 if(err){
                     const message = "Email does not exist!, Plese enter correct email";
                     return errorResponse(res,500,false,message);
@@ -141,8 +142,8 @@ module.exports = {
      * @author sharanveer kannaujiya
      */
     userList: (req,res)=>{
-    
-        userListQuery( (results,error) => {
+
+        userService.userListQuery( (results,error) => {
         
             if(error){
                 const message = "Something went wrong!";
@@ -172,10 +173,10 @@ module.exports = {
          const userId = req.body.user_id
          
          //check user id exist or not 
-         userIdExitQuery(userId,(results,err)=>{
+         userService.userIdExitQuery(userId,(results,err)=>{
              if(results){
                  //update user details if user id does not exist in user details table then insert the recors otherwise update the the records
-                 updateUserDetailsQuery(data,(err,results)=>{
+                 userService.updateUserDetailsQuery(data,(err,results)=>{
                      if(err){
                         const message = "Something went wrong!"
                         return errorResponse(res,500,false,message)
@@ -197,7 +198,7 @@ module.exports = {
          const userId = req.userData.userId;
          if(userId !== "" && body.project_name !== "" && body.working_hours !== "" && body.description !== ""){
 
-             userUpdateStatusQuery(body,userId,(err,results)=>{
+            userService.userUpdateStatusQuery(body,userId,(err,results)=>{
     
                  if(err){
                     const message = "Something went wrong!"
@@ -213,5 +214,31 @@ module.exports = {
             const message = "Something went wrong!"
             return errorResponse(res,500,false,message)
          }
-     }
+     },
+    //  const userId = req.userData.userId;
+
+    checkPermissionTest: async(req,res)=>{
+        try {
+            let data = req.query.permission
+            let userId = req.userData.userId;
+            let response = await rbacServices.checkPermissionService(userId,data)
+            
+            if(response){
+                return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message: "Permission grented.",
+                });   
+            }else{
+                const message = "Not  authorized!";
+                return errorResponse(res,500,false,message);
+            }
+           
+        
+        } catch (error) {
+            const message = "Not authorized";
+            return errorResponse(res,500,false,message);
+        }
+    }
+
 };

@@ -247,8 +247,33 @@ function assignRoleToUserQuery(data,callback){
     );
 }
 
-// let collection = collect(error);
-// collection.dd();
+function getPermissionByRoleId(roleId,callback){
+
+    pool.query(
+        `select permission_id from allow_role_permissions where role_id = '${roleId}' and status = 1`,
+        (error,results)=>{
+            if(error){
+                return callback(error)
+            }
+            return callback(error,results)
+        }
+    )
+}
+
+function checkPermission(permissionName,callback){
+   
+    pool.query(
+        `select * from permissions where permission_name = '${permissionName}' and status = 1`,
+        (error,results)=>{
+            if(error){
+                return callback(error)
+            }
+            return callback(error,results[0])
+        }
+    )
+}
+
+
 module.exports = {
     storeRoleQuery,
     checkRoleNameExist,
@@ -267,5 +292,7 @@ module.exports = {
     updateRolePermissionQuery,
     updateStatusRolePermissionQuery,
     assignRoleToUserQuery,
+    checkPermission,
+    getPermissionByRoleId,
 
 }
