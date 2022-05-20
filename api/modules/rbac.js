@@ -274,6 +274,7 @@ function checkPermission(permissionName,callback){
 }
 
 
+
 module.exports = {
     storeRoleQuery,
     checkRoleNameExist,

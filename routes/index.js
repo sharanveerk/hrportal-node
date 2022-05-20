@@ -3,6 +3,7 @@ var router = express.Router()
 const usersRouter = require("../api/routers/user.router")
 const authRouter = require("../api/routers/auth.router")
 const checkinCheckout = require("../api/routers/checkinCheckout.router")
+const leaveRouter = require("../api/routers/leave.router")
 // const assignRole = require("../api/routers/admin.router")
 const rbac = require("../api/routers/rbac.router")
 
@@ -17,5 +18,8 @@ router.use('/api/checkin-checkout',checkinCheckout);
 router.use('/api/rbac',rbac);
 
 router.use("/api/user",usersRouter);
+
+router.use("/api/leaves",leaveRouter);
+
 
 module.exports = router;

@@ -46,7 +46,9 @@ module.exports = {
             next();
             } catch (err) {
             return res.status(401).send({
-                msg: 'Your session is not valid!'
+              statusCode:401,
+              success:false,
+              msg: 'session expired!'
             });
         }
     },
@@ -79,12 +81,16 @@ module.exports = {
               // let  configEmail = config.super_admin_email1;
               if(roleId !== 1){
                 return res.status(401).send({
+                  statusCode:401,
+                  success:false,
                   msg: 'Not authorized!'
                 });
               }
               next();
           } catch (err) {
             return res.status(401).send({
+              statusCode:401,
+              success:false,
               msg: 'Your session is not valid!'
             });
           }
