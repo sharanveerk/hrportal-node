@@ -4,15 +4,21 @@ const leaves = require("../controllers/leaves//leave.controller")
 const middleware = require("../middleware/auth")
 const path = require("path")
 const multer  = require('multer')
+const collect = require('collect.js');
 
 const storage = multer.diskStorage({
+
     destination: './public/documents',
     filename: (req,file,cb)=>{
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+
+        if(file){
+            return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+        }   
     }
 })
 
 const upload = multer({
+    
     storage: storage
 })
 
@@ -23,6 +29,12 @@ router.put('/leave-type/status-change', middleware.isLoggedIn, leaveTypeControll
 
 
 router.post('/leaves/store', middleware.isLoggedIn, upload.single('documents'), leaves.storeLeave)
+router.get('/leaves/view', middleware.isLoggedIn, leaves.viewLeave)
+router.get('/leaves/list', middleware.isLoggedIn, leaves.listLeave)
+router.put('/leaves/status-change', middleware.isLoggedIn, leaves.statusChangedLeave)
+router.put('/leaves/edit', middleware.isLoggedIn, upload.single('documents'), leaves.editLeave)
+router.put('/leaves/leave-approve', middleware.isLoggedIn, leaves.approveLeave)
+
 router.post('/leave-type/test-upload', upload.single('documents'), leaveTypeController.testUploadImage)
 
 
