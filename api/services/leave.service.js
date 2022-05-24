@@ -81,4 +81,37 @@ module.exports = {
             )
         })
     },
+
+
+    //***********here stop leave type function */
+
+    //*********here start leave function */
+
+    createLeave: (data,documents,userId)=>{
+        let fromDate = data.from_date.split('/')
+        let formatFDate = fromDate[2]+'-'+fromDate[1]+'-'+fromDate[0]
+        
+        let toDate = data.to_date.split('/')
+        let formatTDate = toDate[2]+'-'+toDate[1]+'-'+toDate[0]
+
+        return new Promise ((resolver,reject)=>{
+            pool.query(
+                `insert into leaves(leave_type_id,user_id,from_date,to_date,reasons,document) values(?,?,?,?,?,?)`,
+                [
+                    data.leave_type_id,
+                    userId,
+                    formatFDate,
+                    formatTDate,
+                    data.reasons,
+                    documents
+                ],
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
 }
