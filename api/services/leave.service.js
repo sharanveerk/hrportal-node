@@ -202,5 +202,46 @@ module.exports = {
                 }
             )
         })
+    },
+    geUserByLeaves: (userId)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `SELECT 
+                    leaves.id AS leaves_id,
+                    leaves.leave_type_id,
+                    leaves.user_id,
+                    leaves.approver,
+                    leaves.from_date,
+                    leaves.to_date,
+                    leaves.reasons,
+                    leaves.document,
+                    leave_types.id,
+                    leave_types.leave_type_name,
+                    leave_types.is_paid,
+                    leave_types.allow_number_of_leaves,
+                    users.name AS approved_by,
+                    DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
+                    CASE
+                        WHEN leaves.approver = 0 THEN 'not approved'
+                        ELSE 'approved'
+                    END AS approver
+                FROM
+                    leaves
+                        INNER JOIN
+                    leave_types ON leaves.leave_type_id = leave_types.id
+                        LEFT JOIN
+                    users ON leaves.approver = users.id
+                WHERE
+                    user_id = '${userId}'
+                ORDER BY leaves.id DESC`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
     }
+
 }

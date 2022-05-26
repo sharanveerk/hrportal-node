@@ -12,25 +12,31 @@ module.exports = {
             let body = req.body
             var host = req.get('host');
             let imageUrl = `${host}/documents/${req.file.filename}`
-            let userId = req.userData.userId
-            let checkIdExist = await leaveService.getLeaveType(req.body.leave_type_id)
-            if(checkIdExist){
-                if(body.from_date !== "" && body.to_date !== "" ){
-                    let storeResponse = await leaveService.createLeave(body, imageUrl,userId)
-                    
-                    if(storeResponse){
-                        return res.status(201).json({
-                            statusCode:201,
-                            success:true,
-                            message:"leave has been saved successfully.",
-                        });
+            let imageAcceptedType = req.file.mimetype
+            if(imageAcceptedType == "image/png" || imageAcceptedType == "image/jpeg" || imageAcceptedType == "image/jpg" ){
+                let userId = req.userData.userId
+                let checkIdExist = await leaveService.getLeaveType(req.body.leave_type_id)
+                if(checkIdExist){
+                    if(body.from_date !== "" && body.to_date !== "" ){
+                        let storeResponse = await leaveService.createLeave(body, imageUrl,userId)
+                        
+                        if(storeResponse){
+                            return res.status(201).json({
+                                statusCode:201,
+                                success:true,
+                                message:"leave has been saved successfully.",
+                            });
+                        }
+                    }else{
+                        let message = "from date and to date field do not empty!";
+                        return errorResponse(res,500,false,message);
                     }
                 }else{
-                    let message = "from date and to date field do not empty!";
+                    let message = "leave type name does not exist!";
                     return errorResponse(res,500,false,message);
                 }
             }else{
-                let message = "leave type name does not exist!";
+                let message = "Only .png, .jpg and .jpeg format allowed!";
                 return errorResponse(res,500,false,message);
             }
         } catch (error) {
@@ -180,6 +186,27 @@ module.exports = {
                     let message = "Id does not exist!";
                     return errorResponse(res,500,false,message); 
                 }
+            }else{
+                let message = "Id does not exist!";
+                return errorResponse(res,500,false,message); 
+            }
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message); 
+        }
+    },
+    userByLeave: async(req,res)=>{
+
+        try {
+            let userId = req.userData.userId
+            let userLeaveResponse = await leaveService.geUserByLeaves(userId)
+            if(userLeaveResponse){
+                return res.status(200).json({
+                    statusCode:200,
+                    success:true,
+                    message:"user leave has been fetched successfully.",
+                    data: userLeaveResponse
+                });
             }else{
                 let message = "Id does not exist!";
                 return errorResponse(res,500,false,message); 

@@ -1,5 +1,5 @@
-const pool = require("../../../config/database");
-const config = require("../../../config/config");
+const pool = require("../../config/database");
+const config = require("../../config/config");
 const dateTime = require('node-datetime');
 const jwt = require('jsonwebtoken');
 const dt = dateTime.create();
@@ -217,5 +217,18 @@ module.exports = {
                 return callback(error,results)
             }
         )
+    },
+    userIdExist: (userId)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `select * from users where id = '${userId}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results[0])
+                }
+            )
+        })
     }
 };

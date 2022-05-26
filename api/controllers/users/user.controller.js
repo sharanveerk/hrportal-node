@@ -1,6 +1,6 @@
 const { json } = require("express/lib/response");
 require('dotenv').config();
-const userService = require("../../services/users/user.service");
+const userService = require("../../services/user.service");
 // const {create,userLogin,emailExist,userListQuery,updateUserDetailsQuery,userIdExitQuery,userUpdateStatusQuery}= require("../../services/users/user.service");
 const config = require('../../../config/config');
 const pool = require("../../../config/database");
