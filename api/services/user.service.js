@@ -57,17 +57,26 @@ module.exports = {
 
     checkIn: (id,status,callback)=>{
         pool.query(
-            `insert into checkin_checkout(user_id,status) values(?,?)`,
+            `insert into checkin_checkout(user_id,timestamp,status) values(?,?,?)`,
             [
                 id,
-                status,
+                created,
+                status
+
             ],
-            
             (error, results, fields) => {
-                    if(error){
-                           return callback(error);
-                        }
-                        return callback(null, results);
+                if(error){
+                    return callback(error);
+                }
+                var createdDate ;
+                if(status == 2){
+
+                    var createdDate = created.split(' ');
+                }else{
+                    var createdDate = created.split(' ');
+                }
+                // collect(status).dd();
+               return callback(error, createdDate[1]);
             }
         );
 
@@ -230,5 +239,45 @@ module.exports = {
                 }
             )
         })
+    },
+
+    AttendencePerUser: (userId, filterData)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                // `select * from checkin_checkout where user_id = '${userId}'` ,
+                `SELECT 
+                    DATE(cc.timestamp) dd1, nt.checkin, ncheckout.checkout
+                FROM
+                    hrportal.checkin_checkout cc
+                        INNER JOIN
+                    (SELECT 
+                        GROUP_CONCAT(timestamp) AS checkin, DATE(timestamp) nd
+                    FROM
+                        hrportal.checkin_checkout
+                    WHERE
+                        status = 1 AND user_id = 3
+                    GROUP BY DATE(timestamp)) nt ON nt.nd = DATE(cc.timestamp)
+                    INNER JOIN
+                    (SELECT 
+                        GROUP_CONCAT(timestamp) AS checkout, DATE(timestamp) nc
+                    FROM
+                        hrportal.checkin_checkout
+                    WHERE
+                        status = 2 AND user_id = 3
+                    GROUP BY DATE(timestamp)) ncheckout ON ncheckout.nc = DATE(cc.timestamp)
+                WHERE
+                    cc.user_id = 3
+                GROUP BY DATE(cc.timestamp)`,
+
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    collect(results).dd()
+                    return resolver(results)
+                }
+            )
+        })
     }
 };
+// https://onlinephp.io/c/2fa6a

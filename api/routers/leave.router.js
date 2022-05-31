@@ -21,6 +21,7 @@ router.post('/leave-type/store', middleware.isLoggedIn, leaveTypeController.stor
 router.get('/leave-type/view', middleware.isLoggedIn, leaveTypeController.viewLeaveType)
 router.put('/leave-type/edit', middleware.isLoggedIn, leaveTypeController.editLeaveType)
 router.put('/leave-type/status-change', middleware.isLoggedIn, leaveTypeController.statusChangeLeaveType)
+router.get('/leave-type/list', middleware.isLoggedIn, leaveTypeController.listLeaveType)
 
 
 router.post('/leaves/store', middleware.isLoggedIn, upload.single('documents'), leaves.storeLeave)

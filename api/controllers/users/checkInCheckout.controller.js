@@ -25,10 +25,12 @@ module.exports = {
                 return errorResponse(res,500,false,message);
                
             }
+
             return res.status(201).json({
                 statusCode:201,
                 success:true,
-                message:"checkin successfully"
+                message:"checkin successfully",
+                checkInTime: results
             });
         })
     },
@@ -45,7 +47,9 @@ module.exports = {
             return res.status(201).json({
                 statusCode:201,
                 success:true,
-                message:"checkout successfully"
+                message:"checkout successfully",
+                checkoutTime: results,
+                totalTime: "6:30:00"
             });
         })
     },
