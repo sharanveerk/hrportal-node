@@ -125,6 +125,9 @@ module.exports = {
                         leaves.leave_type_id,
                         leaves.user_id,
                         leaves.approver,
+                        DATE_FORMAT(leaves.from_date, "%d/%m/%Y") as formatedFromDate,
+                        DATE_FORMAT(leaves.to_date, "%d/%m/%Y") as formatedToDate,
+                        DATE_FORMAT(leaves.created_at, "%d/%m/%Y") as formatedApplyDate,
                         leaves.from_date,
                         leaves.to_date,
                         leaves.reasons,
@@ -136,9 +139,10 @@ module.exports = {
                         users.name AS approved_by,
                         DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
                         CASE
-                            WHEN leaves.approver = 0 THEN 'not approved'
-                            ELSE 'approved'
-                        END AS approver
+                            WHEN leaves.status = 1 THEN 'pending'
+                            WHEN leaves.status = 2 THEN 'approved'
+                            ELSE 'reject'
+                        END AS leave_status
                     FROM
                         leaves
                             INNER JOIN
@@ -165,6 +169,9 @@ module.exports = {
                 leaves.leave_type_id,
                 leaves.user_id,
                 leaves.approver,
+                DATE_FORMAT(leaves.from_date, "%d/%m/%Y") as formatedFromDate,
+                DATE_FORMAT(leaves.to_date, "%d/%m/%Y") as formatedToDate,
+                DATE_FORMAT(leaves.created_at, "%d/%m/%Y") as formatedApplyDate,
                 leaves.from_date,
                 leaves.to_date,
                 leaves.reasons,
@@ -176,9 +183,10 @@ module.exports = {
                 users.name AS approved_by,
                 DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
                 CASE
-                    WHEN leaves.approver = 0 THEN 'not approved'
-                    ELSE 'approved'
-                END AS approver
+                    WHEN leaves.approver = 1 THEN 'pending'
+                    WHEN leaves.approver = 2 THEN 'approved'
+                    ELSE 'reject'
+                END AS leave_status
             FROM
                 leaves
                     INNER JOIN
@@ -242,10 +250,10 @@ module.exports = {
             )
         })
     },
-    approveByApproverLeaves: (id,userId)=>{
+    approveByApproverLeaves: (data,userId)=>{
         return new Promise((resolver,reject)=>{
             pool.query(
-                `update leaves set approver='${userId}' where id = '${id}'`,
+                `update leaves set approver='${userId}', status= '${data.value}' where id = '${data.id}'`,
                 (error,results)=>{
                     if(error){
                         return reject(error)
@@ -264,6 +272,8 @@ module.exports = {
                     leaves.user_id,
                     leaves.approver,
                     leaves.from_date,
+                    DATE_FORMAT(leaves.from_date, "%d/%m/%Y") as formatedFromDate,
+                    DATE_FORMAT(leaves.to_date, "%d/%m/%Y") as formatedToDate,
                     leaves.to_date,
                     leaves.reasons,
                     leaves.document,
@@ -274,9 +284,10 @@ module.exports = {
                     users.name AS approved_by,
                     DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
                     CASE
-                        WHEN leaves.approver = 0 THEN 'not approved'
-                        ELSE 'approved'
-                    END AS approver
+                        WHEN leaves.status = 1 THEN 'pending'
+                        WHEN leaves.status = 2 THEN 'Approved'
+                        ELSE 'reject'
+                    END AS leave_status
                 FROM
                     leaves
                         INNER JOIN

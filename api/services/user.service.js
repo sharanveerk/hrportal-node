@@ -273,7 +273,24 @@ module.exports = {
                     if(error){
                         return reject(error)
                     }
-                    collect(results).dd()
+                    results.forEach((ele, index, array) => {
+                          var session = ele.dd1
+                          var cinCout = [];
+                          var checkinSplit = ele.checkin.split(',');
+                          var checkoutSplit  = ele.checkout.split(',');
+                          var arrpush = [];
+
+                      for(let i=0;i<checkinSplit.length;i++){
+                        cinCout.push("checkin"+":"+checkinSplit[i]);
+                        if(checkoutSplit[i]!=undefined){
+                          cinCout.push("checkout"+":"+checkoutSplit[i]);  
+                        }
+                        
+                      }
+                       var arrpush = cinCout;
+                       console.log(arrpush);
+                    });
+
                     return resolver(results)
                 }
             )
@@ -281,3 +298,41 @@ module.exports = {
     }
 };
 // https://onlinephp.io/c/2fa6a
+
+
+/**
+ * [
+    {
+        "session_data": [
+            {
+                "checkintime": "2022-05-23 23:00:00",
+                "checkoutTime": "2022-05-23 23:00:00",
+                "session_hours": 4
+            },
+            {
+                "checkintime": "2022-05-23 23:00:00",
+                "checkoutTime": "2022-05-23 23:00:00",
+                "session_hours": 5
+            }
+        ],
+        "date": "2022-05-23",
+        "total_hours": 9
+    },
+    {
+        "session_data": [
+            {
+                "checkintime": "2022-05-23 23:00:00",
+                "checkoutTime": "2022-05-23 23:00:00",
+                "session_hours": 4
+            },
+            {
+                "checkintime": "2022-05-23 23:00:00",
+                "checkoutTime": "2022-05-23 23:00:00",
+                "session_hours": 4
+            }
+        ],
+        "date": "2022-05-23",
+        "total_hours": 8
+    }
+]
+ */

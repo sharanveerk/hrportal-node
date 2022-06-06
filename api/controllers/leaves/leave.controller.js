@@ -149,10 +149,11 @@ module.exports = {
     },
     approveLeave: async(req,res)=>{
         try {
-            let checkIdexist = await leaveService.getByLeaveId(req.query.id);
+            let query = req.query;
+            let checkIdexist = await leaveService.getByLeaveId(query.id);
             if(checkIdexist){
                 let userId = req.userData.userId
-                let approveResponse = await leaveService.approveByApproverLeaves(req.query.id, userId)
+                let approveResponse = await leaveService.approveByApproverLeaves(query, userId)
                 if(approveResponse){
                     return res.status(200).json({
                         statusCode:200,
