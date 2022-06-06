@@ -216,5 +216,36 @@ module.exports = {
             let message = "Something went wrong!";
             return errorResponse(res,500,false,message); 
         }
+    },
+
+    deleteLeave: async(req,res)=>{
+        try {
+            let id = req.query.id
+            let userId = req.userData.userId
+            let checkIdExist = await leaveService.getByLeaveId(id)
+            if(checkIdExist.user_id == userId){
+                if(checkIdExist.leave_status == "pending"){
+                    let deleteResponse = await leaveService.leaveDelete(id,userId)
+                    if(deleteResponse){
+                        return res.status(200).json({
+                            statusCode:200,
+                            success:true,
+                            message:"leave has been deleted successfully.",
+                        });
+                    }
+                }else{
+                    let message = "You can`t delete the leave after rejected or approved!";
+                    return errorResponse(res,500,false,message); 
+                }
+            }else{
+                let message = "Id does not exist!";
+                return errorResponse(res,500,false,message); 
+            }
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message); 
+        }
     }
+
+
 }

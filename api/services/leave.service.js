@@ -153,6 +153,7 @@ module.exports = {
                         leaves.id = '${id}'
                     ORDER BY leaves.id DESC`,
                 (error,results)=>{
+                   
                      if(error){
                         return reject(error)
                     }
@@ -306,5 +307,17 @@ module.exports = {
             )
         })
     },
-
+    leaveDelete: (id,userId) =>{
+        return new Promise ((resolver,reject)=>{
+            pool.query(
+                `delete from leaves where id= '${id}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    }
 }

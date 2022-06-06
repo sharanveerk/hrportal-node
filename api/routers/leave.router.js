@@ -23,7 +23,6 @@ router.put('/leave-type/edit', middleware.isLoggedIn, leaveTypeController.editLe
 router.put('/leave-type/status-change', middleware.isLoggedIn, leaveTypeController.statusChangeLeaveType)
 router.get('/leave-type/list', middleware.isLoggedIn, leaveTypeController.listLeaveType)
 
-
 router.post('/leaves/store', middleware.isLoggedIn, upload.single('documents'), leaves.storeLeave)
 router.get('/leaves/view', middleware.isLoggedIn, leaves.viewLeave)
 router.get('/leaves/list', middleware.isLoggedIn, leaves.listLeave)
@@ -31,6 +30,7 @@ router.put('/leaves/status-change', middleware.isLoggedIn, leaves.statusChangedL
 router.put('/leaves/edit', middleware.isLoggedIn, upload.single('documents'), leaves.editLeave)
 router.put('/leaves/leave-approve', middleware.isLoggedIn, leaves.approveLeave)
 router.get('/leaves/user-by-leave', middleware.isLoggedIn, leaves.userByLeave)
+router.delete('/leaves/delete-leave', middleware.isLoggedIn, leaves.deleteLeave)
 
 router.post('/leave-type/test-upload', upload.single('documents'), leaveTypeController.testUploadImage)
 
