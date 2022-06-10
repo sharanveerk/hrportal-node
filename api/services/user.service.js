@@ -5,8 +5,6 @@ const jwt = require('jsonwebtoken');
 const dt = dateTime.create();
 const collect = require('collect.js');
 const res = require("express/lib/response");
-// let collection = collect(token);
-// collection.dd();
 
 var created = dt.format('Y-m-d H:M:S')
 module.exports = {
@@ -255,7 +253,7 @@ module.exports = {
                     FROM
                         hrportal.checkin_checkout
                     WHERE
-                        status = 1 AND user_id = 3
+                        status = 1 AND user_id = 8
                     GROUP BY DATE(timestamp)) nt ON nt.nd = DATE(cc.timestamp)
                     INNER JOIN
                     (SELECT 
@@ -263,34 +261,17 @@ module.exports = {
                     FROM
                         hrportal.checkin_checkout
                     WHERE
-                        status = 2 AND user_id = 3
+                        status = 2 AND user_id = 8
                     GROUP BY DATE(timestamp)) ncheckout ON ncheckout.nc = DATE(cc.timestamp)
                 WHERE
-                    cc.user_id = 3
+                    cc.user_id = 8
                 GROUP BY DATE(cc.timestamp)`,
 
                 (error,results)=>{
+
                     if(error){
                         return reject(error)
                     }
-                    results.forEach((ele, index, array) => {
-                          var session = ele.dd1
-                          var cinCout = [];
-                          var checkinSplit = ele.checkin.split(',');
-                          var checkoutSplit  = ele.checkout.split(',');
-                          var arrpush = [];
-
-                      for(let i=0;i<checkinSplit.length;i++){
-                        cinCout.push("checkin"+":"+checkinSplit[i]);
-                        if(checkoutSplit[i]!=undefined){
-                          cinCout.push("checkout"+":"+checkoutSplit[i]);  
-                        }
-                        
-                      }
-                       var arrpush = cinCout;
-                       console.log(arrpush);
-                    });
-
                     return resolver(results)
                 }
             )

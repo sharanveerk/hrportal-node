@@ -12,7 +12,6 @@ const jwt = require('jsonwebtoken');
 // let collection = collect(acl);
 // collection.dd();
 
-
 module.exports = {
     
     userCheckIn: (req,res) =>{
