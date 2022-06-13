@@ -268,7 +268,7 @@ module.exports = {
                 GROUP BY DATE(cc.timestamp)`,
 
                 (error,results)=>{
-
+                    // collect(error).dd()
                     if(error){
                         return reject(error)
                     }

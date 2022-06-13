@@ -47,7 +47,6 @@ module.exports = {
                     var hours = 0;
                     var checkinSplit = ele.checkin.split(',');
                     var checkoutSplit  = ele.checkout.split(',');
-                    
 
                     for(let i=0;i<checkinSplit.length;i++){
                         if(checkoutSplit[i]!=undefined){
@@ -57,7 +56,6 @@ module.exports = {
                             let seconds = Math.floor((new Date(checkoutSplit[i]) - new Date(checkinSplit[i]))/1000);
                             let minutes = Math.floor(seconds/60);
                             hours += Math.floor(minutes/60);
-                          
 
                         }
                     }

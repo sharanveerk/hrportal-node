@@ -183,7 +183,16 @@ function createRolePermissionQuery(data, callback){
 
 function listRolePermissionQuery(callback){
     pool.query(
-        `select * from allow_role_permissions`,
+        `SELECT 
+        allow_role_permissions.id AS allow_id,
+        roles.name AS role_name,
+        permissions.permission_name AS permission_name
+    FROM
+        allow_role_permissions
+            INNER JOIN
+        roles ON allow_role_permissions.role_id = roles.id
+            INNER JOIN
+        permissions ON allow_role_permissions.permission_id = permissions.id where allow_role_permissions.status = 1`,
         (error,results)=>{
             if(error){
                 return callback(error)

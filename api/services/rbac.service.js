@@ -281,6 +281,28 @@ module.exports = {
             )
         })
     },
+    getAssignUserRoleList: ()=>{
+        return new Promise ((resolver,reject)=>{
+            pool.query(
+                `SELECT 
+                    roles.id AS role_id,
+                    roles.name AS role_name,
+                    users.name AS user_name,
+                    users.id AS user_id
+                FROM
+                    roles
+                        INNER JOIN
+                    users ON roles.id = users.role
+                ORDER BY users.id DESC`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    }
 };
 
 

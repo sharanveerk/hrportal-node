@@ -78,5 +78,29 @@ module.exports = {
             const message = "Something went wrong!";
             return errorResponse(res,500,false,message);
         }
-    }
+    },
+    assignRoleList : async(req,res)=>{
+
+        try {
+            let assignList  = await rbacServices.getAssignUserRoleList()
+            if(assignList){
+                return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message: "Role has been asssigned successfully.",
+                    data: assignList,
+                });  
+            }else{
+                const message = "Something went wrong!";
+                return errorResponse(res,500,false,message);
+            }
+
+            // collect(assignList).dd();
+            
+        } catch (error) {
+            const message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+
+    },
 }

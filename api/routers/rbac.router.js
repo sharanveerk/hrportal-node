@@ -32,6 +32,7 @@ router.put('/allow-role-permission/update-status',userMiddleware.isAdmin,rolePer
 // //Route for assign role of users
 router.post("/assign-role/assign", userMiddleware.isAdmin,assignRole.assignRoleToUser)
 router.get("/assign-role/edit-role", userMiddleware.isAdmin,assignRole.editAssignRole)
+router.get("/assign-role/assign-list", userMiddleware.isAdmin,assignRole.assignRoleList)
 // router.delete("/remove-role", userMiddleware.isAdmin,removeRole)
 
 
