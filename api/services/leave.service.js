@@ -141,7 +141,8 @@ module.exports = {
                         CASE
                             WHEN leaves.status = 1 THEN 'pending'
                             WHEN leaves.status = 2 THEN 'approved'
-                            ELSE 'reject'
+                            WHEN leaves.status = 4 THEN 'Revoked'
+                            ELSE 'Rejected'
                         END AS leave_status
                     FROM
                         leaves
@@ -184,9 +185,10 @@ module.exports = {
                 users.name AS approved_by,
                 DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
                 CASE
-                    WHEN leaves.approver = 1 THEN 'pending'
-                    WHEN leaves.approver = 2 THEN 'approved'
-                    ELSE 'reject'
+                    WHEN leaves.approver = 1 THEN 'Pending'
+                    WHEN leaves.approver = 2 THEN 'Approved'
+                    WHEN leaves.approver = 4 THEN 'Revoked'
+                    ELSE 'Rejected'
                 END AS leave_status
             FROM
                 leaves
@@ -285,9 +287,10 @@ module.exports = {
                     users.name AS approved_by,
                     DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
                     CASE
-                        WHEN leaves.status = 1 THEN 'pending'
+                        WHEN leaves.status = 1 THEN 'Pending'
                         WHEN leaves.status = 2 THEN 'Approved'
-                        ELSE 'reject'
+                        WHEN leaves.status = 4 THEN 'Revoked'
+                        ELSE 'Rejected'
                     END AS leave_status
                 FROM
                     leaves
@@ -310,7 +313,7 @@ module.exports = {
     leaveDelete: (id,userId) =>{
         return new Promise ((resolver,reject)=>{
             pool.query(
-                `delete from leaves where id= '${id}'`,
+                `update leaves set status = 4 where id = '${id}'`,
                 (error,results)=>{
                     if(error){
                         return reject(error)

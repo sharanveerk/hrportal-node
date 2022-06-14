@@ -94,7 +94,7 @@ module.exports = {
                         });
                     }
                 }else{
-                    let message = "event type is already exist!";
+                    let message = "event type id does not exist!";
                     return errorResponse(res,500,false,message);
                 }
             }else{
@@ -105,5 +105,31 @@ module.exports = {
             let message = "Something went wrong!";
             return errorResponse(res,500,false,message);
         }
-    }
+    },
+    activeDeactiveTypeList: async(req,res)=>{
+        
+        try {
+            let query = req.query
+            let id = req.query.id
+            let checkExist = await eventService.getLeaveTypeById(id)
+            if(checkExist){
+                let deleteResponse = await eventService.makeActiveDeactiveEventType(query)
+                if(deleteResponse){
+                    return res.status(200).json({
+                        statusCode:200,
+                        success:true,
+                        message:"event type has been deleted successfully.",
+                    });
+                }
+            }else{
+                let message = "event type does not exist!";
+                return errorResponse(res,500,false,message);
+            }
+            
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    
 }

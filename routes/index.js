@@ -10,6 +10,8 @@ const attendenceRouter = require("../api/routers/attendence.router")
 const rbac = require("../api/routers/rbac.router")
 // her events routes call 
 const eventRouter = require("../api/routers/event.router")
+
+const reportRouter = require("../api/routers/report.router")
 const acl = require('express-acl');
 /* GET home page. */
 
@@ -28,6 +30,7 @@ router.use("/api/user",usersRouter);
 
 router.use("/api/leaves",leaveRouter);
 router.use("/api/events",eventRouter);
+router.use("/api/reports",reportRouter);
 
 // router.use("/api/interview",interviewRouter);
 
