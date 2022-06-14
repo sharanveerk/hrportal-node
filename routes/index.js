@@ -9,7 +9,7 @@ const attendenceRouter = require("../api/routers/attendence.router")
 // const assignRole = require("../api/routers/admin.router")
 const rbac = require("../api/routers/rbac.router")
 // her events routes call 
-// const eventRouter = require("../api/routers/event.router")
+const eventRouter = require("../api/routers/event.router")
 const acl = require('express-acl');
 /* GET home page. */
 
@@ -27,7 +27,7 @@ router.use('/api/rbac',rbac);
 router.use("/api/user",usersRouter);
 
 router.use("/api/leaves",leaveRouter);
-// router.use("/api/events",eventRouter);
+router.use("/api/events",eventRouter);
 
 // router.use("/api/interview",interviewRouter);
 

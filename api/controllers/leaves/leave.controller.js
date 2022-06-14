@@ -9,17 +9,42 @@ module.exports = {
 
     storeLeave: async(req,res)=>{
         try {
+
             let body = req.body
             var host = req.get('host');
-            let imageUrl = `${host}/documents/${req.file.filename}`
-            let imageAcceptedType = req.file.mimetype
-            if(imageAcceptedType == "image/png" || imageAcceptedType == "image/jpeg" || imageAcceptedType == "image/jpg" ){
-                let userId = req.userData.userId
-                let checkIdExist = await leaveService.getLeaveType(req.body.leave_type_id)
-                if(checkIdExist){
+            
+            let userId = req.userData.userId
+            let checkIdExist = await leaveService.getLeaveType(req.body.leave_type_id)
+            var imageUrl = null;
+            if(checkIdExist){
+                if(req.file){
+                     imageUrl = `${host}/documents/${req.file.filename}`
+                    let imageAcceptedType = req.file.mimetype
+                    if(imageAcceptedType){
+                        if(imageAcceptedType == "image/png" || imageAcceptedType == "image/jpeg" || imageAcceptedType == "image/jpg" ){
+                       
+                            if(body.from_date !== "" && body.to_date !== "" ){
+                                let storeResponse = await leaveService.createLeave(body, imageUrl,userId)                    
+                                if(storeResponse){
+                                    return res.status(201).json({
+                                        statusCode:201,
+                                        success:true,
+                                        message:"leave has been saved successfully.",
+                                    });
+                                }
+                            }else{
+                                let message = "from date and to date field do not empty!";
+                                return errorResponse(res,500,false,message);
+                            }
+                        }else{
+                            let message = "Only .png, .jpg and .jpeg format allowed!";
+                            return errorResponse(res,500,false,message);
+                        }
+                    }
+                }else{
+
                     if(body.from_date !== "" && body.to_date !== "" ){
-                        let storeResponse = await leaveService.createLeave(body, imageUrl,userId)
-                        
+                        let storeResponse = await leaveService.createLeave(body, imageUrl,userId)                    
                         if(storeResponse){
                             return res.status(201).json({
                                 statusCode:201,
@@ -31,12 +56,9 @@ module.exports = {
                         let message = "from date and to date field do not empty!";
                         return errorResponse(res,500,false,message);
                     }
-                }else{
-                    let message = "leave type name does not exist!";
-                    return errorResponse(res,500,false,message);
                 }
             }else{
-                let message = "Only .png, .jpg and .jpeg format allowed!";
+                let message = "leave type name does not exist!";
                 return errorResponse(res,500,false,message);
             }
         } catch (error) {

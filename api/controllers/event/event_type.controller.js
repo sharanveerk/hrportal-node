@@ -5,17 +5,23 @@ const collect = require('collect.js');
 
 module.exports = {
 
-    storeEvent: async(req,res)=>{
+    storeEventType: async(req,res)=>{
         try {
             let body = req.body
-            if(body.title == null || body.event_type_id == null){
-                let storeResponse = await eventService.createEvent(body)
-                if(storeResponse){
-                    return res.status(201).json({
-                        statusCode:201,
-                        success:true,
-                        message:"event has been saved successfully.",
-                    });
+            if(body.name){
+                let checkExist = await eventService.checkEvent(body)
+                if(checkExist){
+                    let message = "event type is already exist!";
+                    return errorResponse(res,500,false,message);
+                }else{
+                    let storeResponse = await eventService.createEventType(body)
+                    if(storeResponse){
+                        return res.status(201).json({
+                            statusCode:201,
+                            success:true,
+                            message:"event type has been saved successfully.",
+                        });
+                    }
                 }
             }else{
                 let message = "event type name field does not empty!";
