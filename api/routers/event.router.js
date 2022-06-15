@@ -30,5 +30,7 @@ router.put("/event_type/active-deactive", middleware.isLoggedIn,eventTypeControl
 router.post("/events/create", upload.single('banner'),middleware.isLoggedIn,eventController.storeEvent)
 router.get("/events/list", middleware.isLoggedIn,eventController.listEvent)
 router.get("/events/view", middleware.isLoggedIn,eventController.viewEvent)
+router.put("/events/edit", upload.single('banner'), middleware.isLoggedIn,eventController.editEvent)
+router.delete("/events/delete", middleware.isLoggedIn,eventController.deleteEvent)
 
 module.exports = router; 

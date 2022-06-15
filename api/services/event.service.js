@@ -96,14 +96,6 @@ module.exports = {
     },
     createEvent: (data,image)=>{
 
-        let fromDate = data.holiday_from_date.split('/')
-        let formatFDate = fromDate[2]+'-'+fromDate[1]+'-'+fromDate[0]
-        
-        let toDate = data.holiday_to_date.split('/')
-        let formatTDate = toDate[2]+'-'+toDate[1]+'-'+toDate[0]
-
-        let date = data.date.split('/')
-        let formatDate = date[2]+'-'+date[1]+'-'+date[0]
         return new Promise((resolver,reject)=>{
             pool.query(
                 `insert into events(title,event_type,date,description,is_holiday,holiday_from_date,holiday_to_date,image,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?)`,
@@ -187,6 +179,42 @@ module.exports = {
                     return resolver(results[0])
                 }
             )  
+        })
+    },
+
+    updateEvent: (data,imageUrl)=>{
+
+        let fromDate = data.holiday_from_date.split('/')
+        let formatFDate = fromDate[2]+'-'+fromDate[1]+'-'+fromDate[0]
+        
+        let toDate = data.holiday_to_date.split('/')
+        let formatTDate = toDate[2]+'-'+toDate[1]+'-'+toDate[0]
+
+        let date = data.date.split('/')
+        let formatDate = date[2]+'-'+date[1]+'-'+date[0]
+        return new Promise ((resolver,reject)=>{
+            pool.query(
+                `update events set title = '${data.title}',event_type = '${data.event_type_id}',date = '${formatDate}',description = '${data.description}',is_holiday = '${data.is_holiday}',holiday_from_date = '${formatFDate}',holiday_to_date = '${formatTDate}',image = '${imageUrl}',updated_at = '${created}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+    deleteEventById: (id)=>{
+        return new Promise ((resolver,reject)=>{
+            pool.query(
+                `delete from events where id ='${id}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
         })
     },
 
