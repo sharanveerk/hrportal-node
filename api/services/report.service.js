@@ -4,6 +4,7 @@ const dt = dateTime.create();
 var created = dt.format('Y-m-d H:M:S')
 const collect = require('collect.js');
 const res = require("express/lib/response");
+const { use } = require("../routers/report.router");
 
 
 module.exports = {
@@ -94,4 +95,61 @@ module.exports = {
         })
     },
 
+    viewTaskById : (id,userId)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `select * from tasks where id = '${id}' and status = 1`,
+                (error,results)=>{
+                    if(error){
+
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+    getTaskList: (userId)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `select * from tasks where status = 1`,
+                (error,results)=>{
+                    if(error){
+
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+    updateTesk: (data,created_by)=>{
+        
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `update tasks set title='${data.title}',user_id='${data.user_id}',created_by='${created_by}',updated_at='${created}' where id = '${data.id}'`,
+               
+                (error,results)=>{  
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )  
+        })
+    },
+    delteTaskById: (id)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `update tasks set status = 0 where id = '${id}'`,
+                (error,results)=>{
+                    if(error){
+
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    }
 }

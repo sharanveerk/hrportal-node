@@ -18,6 +18,11 @@ const upload = multer({
 
 // tasks type routers
 router.post("/task/create", middleware.isLoggedIn,taskController.storeTask)
+router.get("/task/view", middleware.isLoggedIn,taskController.viewTask)
+router.get("/task/list", middleware.isLoggedIn,taskController.listTask)
+router.put("/task/edit", middleware.isLoggedIn,taskController.editTask)
+router.put("/task/delete", middleware.isLoggedIn,taskController.deleteTask)
+
 router.get("/task/user-task-list", middleware.isLoggedIn,taskController.getUserTask)
 router.post("/task/create-user-task", upload.single('image'),middleware.isLoggedIn,taskController.storeUserTask)
 router.get("/task/dially-user-list", middleware.isLoggedIn,taskController.getUserReportList)

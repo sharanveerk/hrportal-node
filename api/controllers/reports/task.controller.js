@@ -28,6 +28,103 @@ module.exports = {
         }
     },
 
+    viewTask: async(req,res)=>{
+        try {
+            let id = req.query.id
+
+            const userId = req.userData.userId;
+            if(id){
+                let viewResponse = await reportService.viewTaskById(id,userId)
+                if(viewResponse){
+                    return res.status(200).json({
+                        statusCode:200,
+                        success:true,
+                        message:"task has been fetched successfully.",
+                        data: viewResponse
+                    });
+                }
+            }else{
+                let message = "id field is required!";
+                return errorResponse(res,500,false,message);
+            }
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    listTask: async(req,res)=>{
+        try {
+            const userId = req.userData.userId;
+            let listResponse = await reportService.getTaskList(userId)
+            if(listResponse){
+                return res.status(200).json({
+                    statusCode:200,
+                    success:true,
+                    message:"task has been fetched successfully.",
+                    data: listResponse
+                });
+            }
+            
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    
+    editTask: async(req,res)=>{
+
+        try {
+            let body = req.body
+            const userId = req.userData.userId;
+            if(body.title == null && body.user_id == null){
+                let message = "all field is required!";
+                return errorResponse(res,500,false,message);
+            }else{
+                let checkId = await reportService.viewTaskById(body.id,userId)
+                if(checkId){
+                    let storeResponse = await reportService.updateTesk(body,userId)
+                    if(storeResponse){
+                        return res.status(201).json({
+                            statusCode:201,
+                            success:true,
+                            message:"task has been updated successfully.",
+                        });
+                    }
+                }else{
+                    let message = "Incorrect id!";
+                    return errorResponse(res,500,false,message);
+                }
+            }
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
+    deleteTask: async(req,res)=>{
+        try {
+            let id = req.query.id
+            let checkId = await reportService.viewTaskById(id)
+            if(checkId){
+                let deleteResponse = await reportService.delteTaskById(id)
+                if(deleteResponse){
+                    return res.status(200).json({
+                        statusCode:200,
+                        success:true,
+                        message:"task has been deleted successfully.",
+                    });
+                }
+
+            }else{
+                let message = "Incorrect id!";
+                return errorResponse(res,500,false,message);
+            }
+          
+            
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message);
+        }
+    },
 
     getUserTask: async(req,res)=>{
         try {     
