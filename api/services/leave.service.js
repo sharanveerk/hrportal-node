@@ -322,5 +322,50 @@ module.exports = {
                 }
             )
         })
+    },
+    geUserByLeavesBYLeaveTypeId: (userId,leaveTypeId)=>{
+
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `SELECT 
+                    leaves.id AS leaves_id,
+                    leaves.leave_type_id,
+                    leaves.user_id,
+                    leaves.approver,
+                    leaves.from_date,
+                    DATE_FORMAT(leaves.from_date, "%d/%m/%Y") as formatedFromDate,
+                    DATE_FORMAT(leaves.to_date, "%d/%m/%Y") as formatedToDate,
+                    leaves.to_date,
+                    leaves.reasons,
+                    leaves.document,
+                    leave_types.id,
+                    leave_types.leave_type_name,
+                    leave_types.is_paid,
+                    leave_types.allow_number_of_leaves,
+                    users.name AS approved_by,
+                    DATEDIFF(leaves.to_date, leaves.from_date) AS total_leaves_days,
+                    CASE
+                        WHEN leaves.status = 1 THEN 'Pending'
+                        WHEN leaves.status = 2 THEN 'Approved'
+                        WHEN leaves.status = 4 THEN 'Revoked'
+                        ELSE 'Rejected'
+                    END AS leave_status
+                FROM
+                    leaves
+                        INNER JOIN
+                    leave_types ON leaves.leave_type_id = leave_types.id
+                        LEFT JOIN
+                    users ON leaves.approver = users.id
+                WHERE
+                    user_id = '${userId}' AND leave_type_id = '${leaveTypeId}'
+                ORDER BY leaves.id DESC`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
     }
 }

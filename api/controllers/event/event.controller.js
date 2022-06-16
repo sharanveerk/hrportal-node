@@ -12,53 +12,40 @@ module.exports = {
                 let message = "event type name field does not empty!";
                 return errorResponse(res,500,false,message);
             }else{
-                var imageUrl=null
-                if(req.file){
-                    var host = req.get('host');
-                    imageUrl = `${host}/events/${req.file.filename}`
 
-                    let imageAcceptedType = req.file.mimetype
-                    if(imageAcceptedType){
-                        if(imageAcceptedType == "image/png" || imageAcceptedType == "image/jpeg" || imageAcceptedType == "image/jpg" ){
+                let checkEventTypeExist = await eventService.getLeaveTypeById(body.event_type_id)
+                if(checkEventTypeExist){
+
+                    var imageUrl=null
+                    if(req.file){
                         
-                            let checkEventTypeExist = await eventService.getLeaveTypeById(body.event_type_id)
-                            if(checkEventTypeExist){
-            
-                                let storeResponse = await eventService.createEvent(body,imageUrl)
-                                if(storeResponse){
-                                    return res.status(201).json({
-                                        statusCode:201,
-                                        success:true,
-                                        message:"event has been saved successfully.",
-                                    });
-                                }
-            
+                        let imageAcceptedType = req.file.mimetype
+                        if(imageAcceptedType){
+                            if(imageAcceptedType == "image/png" || imageAcceptedType == "image/jpeg" || imageAcceptedType == "image/jpg" ){
+                                var host = req.get('host');
+                                imageUrl = `${host}/events/${req.file.filename}`
+
                             }else{
-                                let message = "event type name does not empty exist!";
-                                return errorResponse(res,500,false,message); 
+                                let message = "Only .png, .jpg and .jpeg format allowed!";
+                                return errorResponse(res,500,false,message);
                             }
-                        }else{
-                            let message = "Only .png, .jpg and .jpeg format allowed!";
-                            return errorResponse(res,500,false,message);
                         }
+                    }else{   
+                        imageUrl = null
                     }
-                }else{   
-                    let checkEventTypeExist = await eventService.getLeaveTypeById(body.event_type_id)
-                    if(checkEventTypeExist){
-    
-                        let storeResponse = await eventService.createEvent(body,imageUrl)
-                        if(storeResponse){
-                            return res.status(201).json({
-                                statusCode:201,
-                                success:true,
-                                message:"event has been saved successfully.",
-                            });
-                        }
-    
-                    }else{
-                        let message = "event type name does not empty exist!";
-                        return errorResponse(res,500,false,message); 
+
+                    let storeResponse = await eventService.createEvent(body,imageUrl)
+                    if(storeResponse){
+                        return res.status(201).json({
+                            statusCode:201,
+                            success:true,
+                            message:"event has been saved successfully.",
+                        });
                     }
+                }else{
+                    let message = "event type name does not empty exist!";
+                    return errorResponse(res,500,false,message); 
+
                 }
             }
         } catch (error) {
@@ -94,7 +81,7 @@ module.exports = {
     },
     listEvent: async(req,res)=>{
         try {
-            let response = await eventService.getLeaveList()
+            let response = await eventService.getEventList()
             if(response){
                 return res.status(200).json({
                     statusCode:200,

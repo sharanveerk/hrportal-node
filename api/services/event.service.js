@@ -95,7 +95,14 @@ module.exports = {
         })
     },
     createEvent: (data,image)=>{
+        let fromDate = data.holiday_from_date.split('/')
+        let formatFDate = fromDate[2]+'-'+fromDate[1]+'-'+fromDate[0]
+        
+        let toDate = data.holiday_to_date.split('/')
+        let formatTDate = toDate[2]+'-'+toDate[1]+'-'+toDate[0]
 
+        let date = data.date.split('/')
+        let formatDate = date[2]+'-'+date[1]+'-'+date[0]
         return new Promise((resolver,reject)=>{
             pool.query(
                 `insert into events(title,event_type,date,description,is_holiday,holiday_from_date,holiday_to_date,image,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?)`,
@@ -112,6 +119,7 @@ module.exports = {
                     created
                 ],
                 (error,results)=>{  
+
                     if(error){
                         return reject(error)
                     }
@@ -120,7 +128,7 @@ module.exports = {
             )  
         })
     },
-    getLeaveList: ()=>{
+    getEventList: ()=>{
         return new Promise((resolver,reject)=>{
             pool.query(
                 `SELECT 
@@ -142,6 +150,7 @@ module.exports = {
                 events.status = 1
             ORDER BY events.created_at DESC`,
                 (error,results)=>{ 
+                    
                     if(error){
                         return reject(error)
                     }
@@ -208,6 +217,81 @@ module.exports = {
         return new Promise ((resolver,reject)=>{
             pool.query(
                 `delete from events where id ='${id}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+    createTAnnouncement: (data)=>{
+
+        return new Promise((resolver,reject)=>{
+
+            pool.query(
+                `insert into announcements(title,description,created_at,updated_at) values(?,?,?,?)`,
+                [
+                    data.title,
+                    data.description, 
+                    created,
+                    created
+                ],
+                (error,results)=>{  
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )  
+        })
+    },
+    getAnnouncement: ()=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `select * from announcements where status = 1   ORDER BY created_at DESC`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+
+    getAnnouncementById: (id)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `select * from announcements where status = 1 and id = '${id}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+    updateAnnouncement: (data)=>{
+
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `update announcements set title='${data.title}',description='${data.description}' where id = '${data.id}'`,
+                (error,results)=>{
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )
+        })
+    },
+    deleteAnnouncementById: (id)=>{
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `delete from announcements where id = '${id}'`,
                 (error,results)=>{
                     if(error){
                         return reject(error)

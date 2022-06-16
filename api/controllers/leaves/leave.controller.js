@@ -224,11 +224,41 @@ module.exports = {
             let userId = req.userData.userId
             let userLeaveResponse = await leaveService.geUserByLeaves(userId)
             if(userLeaveResponse){
+                var arrpush = []
+                userLeaveResponse.forEach(element => {
+                        
+                    let rowFrom = element.from_date
+                    var b = rowFrom.toUTCString('en-US')
+                    let spF = b.split(' ')
+                    let finalFrom = spF[0]+''+spF[1]+' '+spF[2]
+
+                    let rowTo = element.from_date
+                    var b = rowTo.toUTCString('en-US')
+                    let sp = b.split(' ')
+                    let finalTo = sp[0]+''+sp[1]+' '+sp[2]
+                    
+                    let entry = {
+                        leaves_id: element.leaves_id,
+                        leave_type_id: element.leave_type_id,
+                        approver: element.approver,
+                        from_date: finalFrom,
+                        to_date: finalTo,
+                        reasons:element.reasons,
+                        document: element.document,
+                        leave_type_name: element.leave_type_name,
+                        is_paid: element.is_paid,
+                        allow_number_of_leaves: element.allow_number_of_leaves,
+                        approved_by: element.approved_by,
+                        total_leaves_days: element.total_leaves_days,
+                        leave_status: element.leave_status,
+                    }
+                    arrpush.push(entry);
+                });
                 return res.status(200).json({
                     statusCode:200,
                     success:true,
                     message:"user leave has been fetched successfully.",
-                    data: userLeaveResponse
+                    data: arrpush
                 });
             }else{
                 let message = "Id does not exist!";
@@ -259,6 +289,29 @@ module.exports = {
                     let message = "You can`t delete the leave after rejected or approved!";
                     return errorResponse(res,500,false,message); 
                 }
+            }else{
+                let message = "Id does not exist!";
+                return errorResponse(res,500,false,message); 
+            }
+        } catch (error) {
+            let message = "Something went wrong!";
+            return errorResponse(res,500,false,message); 
+        }
+    },
+
+    listLeaveByLeaveType: async(req,res)=>{
+        try {
+            let leaveTypeId = req.query.leave_type_id
+            let userId = req.userData.userId
+            // collect(userId).dd()
+            let userLeaveResponse = await leaveService.geUserByLeavesBYLeaveTypeId(userId,leaveTypeId)
+            if(userLeaveResponse){
+                return res.status(200).json({
+                    statusCode:200,
+                    success:true,
+                    message:"user leave has been fetched successfully.",
+                    data: userLeaveResponse
+                });
             }else{
                 let message = "Id does not exist!";
                 return errorResponse(res,500,false,message); 

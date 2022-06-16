@@ -31,6 +31,7 @@ router.put('/leaves/edit', middleware.isLoggedIn, upload.single('documents'), le
 router.put('/leaves/leave-approve', middleware.isLoggedIn, leaves.approveLeave)
 router.get('/leaves/user-by-leave', middleware.isLoggedIn, leaves.userByLeave)
 router.delete('/leaves/delete-leave', middleware.isLoggedIn, leaves.deleteLeave)
+router.get('/leaves/leave-list-by-leave-type', middleware.isLoggedIn, leaves.listLeaveByLeaveType)
 
 router.post('/leave-type/test-upload', upload.single('documents'), leaveTypeController.testUploadImage)
 

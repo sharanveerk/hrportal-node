@@ -2,6 +2,7 @@ const router = require("express").Router();
 const middleware = require("../middleware/auth")
 const eventTypeController = require("../controllers/event/event_type.controller");
 const eventController = require("../controllers/event/event.controller");
+const announcementController = require("../controllers/event/announcement.controller");
 
 const path = require("path")
 const multer  = require('multer')
@@ -32,5 +33,13 @@ router.get("/events/list", middleware.isLoggedIn,eventController.listEvent)
 router.get("/events/view", middleware.isLoggedIn,eventController.viewEvent)
 router.put("/events/edit", upload.single('banner'), middleware.isLoggedIn,eventController.editEvent)
 router.delete("/events/delete", middleware.isLoggedIn,eventController.deleteEvent)
+
+// announcement routers 
+router.post("/announcements/create", middleware.isLoggedIn,announcementController.storeAnnouncement)
+router.get("/announcements/list", middleware.isLoggedIn,announcementController.listAnnouncement)
+router.get("/announcements/view", middleware.isLoggedIn,announcementController.viewAnnouncement)
+router.put("/announcements/edit", middleware.isLoggedIn,announcementController.editAnnouncement)
+router.delete("/announcements/delete", middleware.isLoggedIn,announcementController.deleteAnnouncement)
+
 
 module.exports = router; 
