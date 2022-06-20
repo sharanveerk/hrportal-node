@@ -83,11 +83,65 @@ module.exports = {
         try {
             let response = await eventService.getEventList()
             if(response){
+                /**
+                 *  var arrpush = []
+                userLeaveResponse.forEach(element => {
+                        
+                    let rowFrom = element.from_date
+                    var b = rowFrom.toUTCString('en-US')
+                    let spF = b.split(' ')
+                    let finalFrom = spF[0]+''+spF[1]+' '+spF[2]
+
+                    let rowTo = element.from_date
+                    var b = rowTo.toUTCString('en-US')
+                    let sp = b.split(' ')
+                    let finalTo = sp[0]+''+sp[1]+' '+sp[2]
+                    
+                    let entry = {
+                        leaves_id: element.leaves_id,
+                        leave_type_id: element.leave_type_id,
+                        approver: element.approver,
+                        from_date: finalFrom,
+                        to_date: finalTo,
+                        reasons:element.reasons,
+                        document: element.document,
+                        leave_type_name: element.leave_type_name,
+                        is_paid: element.is_paid,
+                        allow_number_of_leaves: element.allow_number_of_leaves,
+                        approved_by: element.approved_by,
+                        total_leaves_days: element.total_leaves_days,
+                        leave_status: element.leave_status,
+                    }
+                    arrpush.push(entry);
+                });
+                 */
+                var arrpush = []
+                response.forEach(element => {
+
+                    let imageUrl = ""
+                    if(element.image_url == "null"){
+                        var host = req.get('host');
+                        imageUrl = `${host}/logo/logo.png`
+                    }else{
+                        imageUrl = element.image_url
+                    }
+                    let entry = {
+                        events_id: element.events_id,
+                        events_title: element.events_title,
+                        events_descriptions: element.events_descriptions,
+                        is_holiday: element.is_holiday,
+                        holiday_from_date: element.holiday_from_date,
+                        event_type_name: element.event_type_name,
+                        image_url: imageUrl,
+                        status: element.status
+                    }
+                    arrpush.push(entry);
+                });
                 return res.status(200).json({
                     statusCode:200,
                     success:true,
                     message:"event has been fetched successfully.",
-                    data:response
+                    data:arrpush
                 });
             }else{  
                 let message = "Somethiing went wrong!";
