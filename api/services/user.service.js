@@ -113,7 +113,25 @@ module.exports = {
 
     userListQuery: (callback)=>{
         pool.query(
-            `select * from users`,
+            `SELECT 
+            users.id AS id,
+            users.name AS name,
+            users.last_name AS last_name,
+            users.email AS email,
+            users.email_verified_at AS email_verified_at,
+            roles.name AS role,
+            users.status AS status,
+            users.gender AS gender,
+            users.phone AS phone,
+            users.firebase_token AS firebase_token,
+            users.created_at AS created_at,
+            users.updated_at AS updated_at
+        FROM
+            hrportal.users
+                LEFT JOIN
+            roles ON roles.id = users.role
+        WHERE
+            users.status = 1`,
             (error,results,fields)=>{
                 if(error){
                     return callback(error)

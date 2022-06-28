@@ -83,38 +83,7 @@ module.exports = {
         try {
             let response = await eventService.getEventList()
             if(response){
-                /**
-                 *  var arrpush = []
-                userLeaveResponse.forEach(element => {
-                        
-                    let rowFrom = element.from_date
-                    var b = rowFrom.toUTCString('en-US')
-                    let spF = b.split(' ')
-                    let finalFrom = spF[0]+''+spF[1]+' '+spF[2]
-
-                    let rowTo = element.from_date
-                    var b = rowTo.toUTCString('en-US')
-                    let sp = b.split(' ')
-                    let finalTo = sp[0]+''+sp[1]+' '+sp[2]
-                    
-                    let entry = {
-                        leaves_id: element.leaves_id,
-                        leave_type_id: element.leave_type_id,
-                        approver: element.approver,
-                        from_date: finalFrom,
-                        to_date: finalTo,
-                        reasons:element.reasons,
-                        document: element.document,
-                        leave_type_name: element.leave_type_name,
-                        is_paid: element.is_paid,
-                        allow_number_of_leaves: element.allow_number_of_leaves,
-                        approved_by: element.approved_by,
-                        total_leaves_days: element.total_leaves_days,
-                        leave_status: element.leave_status,
-                    }
-                    arrpush.push(entry);
-                });
-                 */
+              
                 var arrpush = []
                 response.forEach(element => {
 

@@ -3,16 +3,13 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../../config/database');
-const {createUser} = require("../controllers/users/user.controller");
+const {createUser, logoutUser} = require("../controllers/users/user.controller");
 const userMiddleware = require('../middleware/auth');
 const errorResponse = require("../services/errorResponse.service");
 const dateTime = require('node-datetime');
 const dt = dateTime.create();
 const created = dt.format('Y-m-d H:M:S')
 const collect = require('collect.js');
-// const acl = require('express-acl');
-// let collection = collect(acl);
-// collection.dd();
 
 router.post('/sign-up', createUser);
 router.post('/login', (req, res, next) => {
@@ -66,11 +63,24 @@ router.post('/login', (req, res, next) => {
     );
   });
   
-  router.get('/secret-route', userMiddleware.isLoggedIn, (req, res, next) => {
-    return res.status(200).send({
-        statusCode:200,
-        success:true,
-        message: "Authorized!"
-    });
+router.get('/secret-route', userMiddleware.isLoggedIn, (req, res, next) => {
+  return res.status(200).send({
+      statusCode:200,
+      success:true,
+      message: "Authorized!"
   });
+});
+
+router.post('/logout', userMiddleware.isLoggedIn, logoutUser)
+
 module.exports = router; 
+
+// async (req, res) => { 
+//   const token = req.token;
+//   const now = new Date();
+//   const expire = new Date(req.user.exp);
+//   const milliseconds = now.getTime() - expire.getTime();
+//   /* ----------------------------- BlackList Token ---------------------------- */
+//   await cache.set(token, token, milliseconds);
+
+//   return res.json({ message: 'Logged out successfully' });

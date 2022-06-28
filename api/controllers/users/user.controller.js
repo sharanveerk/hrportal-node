@@ -239,6 +239,32 @@ module.exports = {
             const message = "Not authorized";
             return errorResponse(res,500,false,message);
         }
+    },
+
+    logoutUser: (req,res)=>{
+
+        try {
+            // let token  = req.body;
+            // refreshTokens = refreshTokens.filter(token => t !== token);
+            // collect(refreshTokens).dd()
+            
+            const authHeader = req.headers["authorization"];
+            jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
+                if (logout) {
+                    return res.status(201).json({
+                        statusCode:201,
+                        success:true,
+                        message: "You have been Logged Out",
+                    });   
+                } else {
+                    const message = "Not authorized";
+                    return errorResponse(res,401,false,message);
+                }
+            });
+        } catch (error) {
+            const message = "Not authorized";
+            return errorResponse(res,401,false,message);
+        }
     }
 
 };
