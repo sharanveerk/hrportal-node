@@ -11,6 +11,7 @@ const successResponse = require("../../services/successResponse.service");
 const rbacServices = require("../../services/rbac.service")
 const jwt = require('jsonwebtoken');
 const dateTime = require('node-datetime');
+const res = require("express/lib/response");
 const dt = dateTime.create();
 const created = dt.format('Y-m-d H:M:S')
 
@@ -241,6 +242,26 @@ module.exports = {
         }
     },
 
+    checkAutToken: async(req,res)=>{
+
+        try {
+            let token = req.body.token
+            if(token){
+                return res.status(201).json({
+                    statusCode:201,
+                    success:true,
+                    message: "Permission grented.",
+                    token: token
+                });   
+            }else{
+                const message = "Not  authorized!";
+                return errorResponse(res,500,false,message);
+            }
+        } catch (error) {
+            const message = "Not  authorized!";
+            return errorResponse(res,500,false,message);
+        }
+    },
     logoutUser: (req,res)=>{
 
         try {
