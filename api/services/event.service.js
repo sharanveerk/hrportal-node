@@ -5,7 +5,6 @@ var created = dt.format('Y-m-d H:M:S')
 const collect = require('collect.js');
 const res = require("express/lib/response");
 
-
 module.exports = {
     createEventType: (data)=>{
 
@@ -148,6 +147,7 @@ module.exports = {
                 event_types ON events.event_type = event_types.id
             WHERE
                 events.status = 1
+                    AND events.holiday_to_date >= CURDATE()
             ORDER BY events.created_at DESC`,
                 (error,results)=>{ 
                     
