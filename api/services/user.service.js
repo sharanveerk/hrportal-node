@@ -260,33 +260,33 @@ module.exports = {
     AttendencePerUser: (userId, filterData)=>{
         return new Promise((resolver,reject)=>{
             pool.query(
-                // `select * from checkin_checkout where user_id = '${userId}'` ,
-                `SELECT 
-                    DATE(cc.timestamp) dd1, nt.checkin, ncheckout.checkout
-                FROM
-                    hrportal.checkin_checkout cc
-                        INNER JOIN
-                    (SELECT 
-                        GROUP_CONCAT(timestamp) AS checkin, DATE(timestamp) nd
-                    FROM
-                        hrportal.checkin_checkout
-                    WHERE
-                        status = 1 AND user_id = '${userId}'
-                    GROUP BY DATE(timestamp)) nt ON nt.nd = DATE(cc.timestamp)
-                    INNER JOIN
-                    (SELECT 
-                        GROUP_CONCAT(timestamp) AS checkout, DATE(timestamp) nc
-                    FROM
-                        hrportal.checkin_checkout
-                    WHERE
-                        status = 2 AND user_id = '${userId}'
-                    GROUP BY DATE(timestamp)) ncheckout ON ncheckout.nc = DATE(cc.timestamp)
-                WHERE
-                    cc.user_id = '${userId}'
-                GROUP BY DATE(cc.timestamp)`,
+                `select * from checkin_checkout where user_id = 8` ,
+                // `SELECT 
+                //     DATE(cc.timestamp) dd1, nt.checkin, ncheckout.checkout
+                // FROM
+                //     hrportal.checkin_checkout cc
+                //         INNER JOIN
+                //     (SELECT 
+                //         GROUP_CONCAT(timestamp) AS checkin, DATE(timestamp) nd
+                //     FROM
+                //         hrportal.checkin_checkout
+                //     WHERE
+                //         status = 1 AND user_id = '${userId}'
+                //     GROUP BY DATE(timestamp)) nt ON nt.nd = DATE(cc.timestamp)
+                //     INNER JOIN
+                //     (SELECT 
+                //         GROUP_CONCAT(timestamp) AS checkout, DATE(timestamp) nc
+                //     FROM
+                //         hrportal.checkin_checkout
+                //     WHERE
+                //         status = 2 AND user_id = '${userId}'
+                //     GROUP BY DATE(timestamp)) ncheckout ON ncheckout.nc = DATE(cc.timestamp)
+                // WHERE
+                //     cc.user_id = '${userId}'
+                // GROUP BY DATE(cc.timestamp)`,
 
                 (error,results)=>{
-                    // collect(error).dd()
+                    // collect(results).dd()
                     if(error){
                         return reject(error)
                     }
