@@ -192,7 +192,7 @@ function listRolePermissionQuery(callback){
             INNER JOIN
         roles ON allow_role_permissions.role_id = roles.id
             INNER JOIN
-        permissions ON allow_role_permissions.permission_id = permissions.id where allow_role_permissions.status = 1`,
+        permissions ON allow_role_permissions.permission_id = permissions.id`,
         (error,results)=>{
             if(error){
                 return callback(error)
