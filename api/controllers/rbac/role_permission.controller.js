@@ -65,7 +65,7 @@ module.exports = {
                         statusCode:200,
                         success:true,
                         message: "Role Permission has been fetched successfully.",
-                        data: viewResponse
+                        data: viewResponse[0]
                     });  
                 }else{
                     const message = "Something went wrong!";

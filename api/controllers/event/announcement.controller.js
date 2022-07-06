@@ -51,7 +51,7 @@ module.exports = {
                     statusCode:200,
                     success:true,
                     message:"Announcement has been fetched successfully.",
-                    data: viewResponse
+                    data: viewResponse[0]
                 });
             }
         } catch (error) {
