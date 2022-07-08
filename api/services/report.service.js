@@ -98,13 +98,25 @@ module.exports = {
     viewTaskById : (id,userId)=>{
         return new Promise((resolver,reject)=>{
             pool.query(
-                `select * from tasks where id = '${id}' and status = 1`,
+                `SELECT 
+                    tasks.id AS id,
+                    tasks.title AS title,
+                    tasks.user_id AS user_id,
+                    tasks.created_by AS created_by,
+                    tasks.status AS status,
+                    users.name AS user_name
+                FROM
+                    tasks
+                        INNER JOIN
+                    users ON users.id = tasks.user_id
+                WHERE
+                    tasks.id = ${id} AND tasks.status = 1`,
                 (error,results)=>{
                     if(error){
 
                         return reject(error)
                     }
-                    return resolver(results)
+                    return resolver(results[0])
                 }
             )
         })
@@ -112,7 +124,19 @@ module.exports = {
     getTaskList: (userId)=>{
         return new Promise((resolver,reject)=>{
             pool.query(
-                `select * from tasks where status = 1`,
+                `SELECT 
+                tasks.id AS id,
+                tasks.title AS title,
+                tasks.user_id AS user_id,
+                tasks.created_by AS created_by,
+                tasks.status AS status,
+                users.name AS user_name
+            FROM
+                tasks
+                    INNER JOIN
+                users ON users.id = tasks.user_id
+            WHERE
+                tasks.status = 1`,
                 (error,results)=>{
                     if(error){
 
