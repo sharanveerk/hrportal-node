@@ -107,7 +107,7 @@ module.exports = {
                 `insert into events(title,event_type,date,description,is_holiday,holiday_from_date,holiday_to_date,image,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?)`,
                 [
                     data.title,
-                    data.event_type,
+                    data.event_type_id,
                     formatDate,
                     data.description,
                     data.is_holiday,
