@@ -87,8 +87,8 @@ module.exports = {
                 var arrpush = []
                 response.forEach(element => {
 
-                    let imageUrl = ""
-                    if(element.image_url == "null"){
+                    var imageUrl = ""
+                    if(element.image_url == null){
                         var host = req.get('host');
                         imageUrl = `${host}/logo/logo.png`
                     }else{
@@ -100,6 +100,7 @@ module.exports = {
                         events_descriptions: element.events_descriptions,
                         is_holiday: element.is_holiday,
                         holiday_from_date: element.holiday_from_date,
+                        holiday_to_date: element.holiday_to_date,
                         event_type_name: element.event_type_name,
                         image_url: imageUrl,
                         status: element.status
