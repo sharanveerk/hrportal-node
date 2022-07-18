@@ -15,14 +15,14 @@ module.exports = {
 
                 let checkEventTypeExist = await eventService.getLeaveTypeById(body.event_type_id)
                 if(checkEventTypeExist){
-
+                    var host = req.get('host');
                     var imageUrl=null
                     if(req.file){
                         
                         let imageAcceptedType = req.file.mimetype
                         if(imageAcceptedType){
                             if(imageAcceptedType == "image/png" || imageAcceptedType == "image/jpeg" || imageAcceptedType == "image/jpg" ){
-                                var host = req.get('host');
+                                // var host = req.get('host');
                                 imageUrl = `${host}/events/${req.file.filename}`
 
                             }else{
@@ -31,7 +31,7 @@ module.exports = {
                             }
                         }
                     }else{   
-                        imageUrl = null
+                        imageUrl = `${host}/logo/logo.png`
                     }
 
                     let storeResponse = await eventService.createEvent(body,imageUrl)
@@ -87,13 +87,6 @@ module.exports = {
                 var arrpush = []
                 response.forEach(element => {
 
-                    var imageUrl = ""
-                    if(element.image_url == null){
-                        var host = req.get('host');
-                        imageUrl = `${host}/logo/logo.png`
-                    }else{
-                        imageUrl = element.image_url
-                    }
                     let entry = {
                         events_id: element.events_id,
                         events_title: element.events_title,
@@ -102,7 +95,7 @@ module.exports = {
                         holiday_from_date: element.holiday_from_date,
                         holiday_to_date: element.holiday_to_date,
                         event_type_name: element.event_type_name,
-                        image_url: imageUrl,
+                        image_url: element.image_url,
                         status: element.status
                     }
                     arrpush.push(entry);
