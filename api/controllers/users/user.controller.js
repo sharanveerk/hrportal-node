@@ -286,6 +286,41 @@ module.exports = {
             const message = "Not authorized";
             return errorResponse(res,401,false,message);
         }
-    }
+    },
+     loginAdmin: async(req,res)=>{
 
+        try {
+            // collect(req.body).dd()
+           
+            let checkLoginResponse = await userService.AdminLogin(req.body)
+            // collect(checkLoginResponse).dd();
+            if(checkLoginResponse){
+                const token = jwt.sign({
+                    email: checkLoginResponse.email,
+                    userId: checkLoginResponse.id,
+                    role: 1,
+                  },
+                  'SECRETKEY', {
+                    expiresIn: '7d'
+                  }
+                );
+                let updateTokenResponse = await userService.updateToken(token,checkLoginResponse.id)
+                return res.status(200).json({
+                    statusCode:200,
+                    success:true,
+                    message: "You have been Logged in",
+                    data: checkLoginResponse,
+                    token: token
+                }); 
+ 
+            }else{
+                const message = "Not authorized";
+                return errorResponse(res,401,false,message);
+            }
+        } catch (error) {
+            const message = "Not authorized";
+            return errorResponse(res,401,false,message);
+        }
+
+    }
 };

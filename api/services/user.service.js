@@ -331,7 +331,39 @@ module.exports = {
                 }
             )
         })
-    }
+    },
+
+    AdminLogin: (data)=>{
+
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `select * from users where email = ? and password = ?`,
+                [data.email,data.password],
+                (error,results)=>{  
+                
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results[0])
+                }
+            )  
+        })
+    },
+    updateToken: (token,userId)=>{
+
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `UPDATE user_tokens SET token = '${token}',updated_at = '${created}' WHERE user_id = '${userId}'`,
+                (error,results)=>{  
+                
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results)
+                }
+            )  
+        })
+    },
 };
 // https://onlinephp.io/c/2fa6a
 
