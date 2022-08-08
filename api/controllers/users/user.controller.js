@@ -305,11 +305,16 @@ module.exports = {
                   }
                 );
                 let updateTokenResponse = await userService.updateToken(token,checkLoginResponse.id)
+                var response = {};
+                response.id = checkLoginResponse.id
+                response.name = checkLoginResponse.name
+                response.email = checkLoginResponse.email
+                response.role = checkLoginResponse.role
                 return res.status(200).json({
                     statusCode:200,
                     success:true,
                     message: "You have been Logged in",
-                    data: checkLoginResponse,
+                    data: response,
                     token: token
                 }); 
  
