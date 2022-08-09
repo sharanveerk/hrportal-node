@@ -364,9 +364,30 @@ module.exports = {
             )  
         })
     },
+    checkToken: (token,userId)=>{
+       
+        return new Promise((resolver,reject)=>{
+            pool.query(
+                `SELECT 
+                *
+            FROM
+                user_tokens
+            WHERE 
+            token = '${token}'
+            AND 
+               token = '${token}'`,
+                (error,results)=>{  
+                    if(error){
+                        return reject(error)
+                    }
+                    return resolver(results[0])
+                }
+            )  
+        })
+    },
 };
-// https://onlinephp.io/c/2fa6a
 
+// https://onlinephp.io/c/2fa6a
 
 /**
  * [

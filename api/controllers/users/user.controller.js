@@ -262,26 +262,47 @@ module.exports = {
             return errorResponse(res,500,false,message);
         }
     },
-    logoutUser: (req,res)=>{
+    logoutUser: async(req,res)=>{
 
         try {
-            // let token  = req.body;
-            // refreshTokens = refreshTokens.filter(token => t !== token);
-            // collect(refreshTokens).dd()
-            
             const authHeader = req.headers["authorization"];
-            jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
-                if (logout) {
-                    return res.status(201).json({
-                        statusCode:201,
-                        success:true,
-                        message: "You have been Logged Out",
-                    });   
-                } else {
+            const token = authHeader.split(' ');
+            // collect(token[1]).dd()
+            let userId = req.userData.userId;
+            let userEmail = req.userData.email;
+            let userRole = req.userData.role;
+            let checkTokenResponse = await userService.checkToken(token[1],userId);
+            if(checkTokenResponse){
+                const token = jwt.sign({
+                    email: userEmail,
+                    userId: userId,
+                    role: userRole,
+                  },
+                  'SECRETKEY', {
+                    expiresIn: '0'
+                  }
+                );
+                if(token){
+                    let updateTokenResponse = await userService.updateToken(token,userId)
+                    if(updateTokenResponse){
+                        return res.status(200).json({
+                            statusCode:200,
+                            success:true,
+                            message: "You have been Logged Out",
+                            token: token
+                        });   
+                    }else{
+                        const message = "Not authorized";
+                        return errorResponse(res,401,false,message);
+                    }
+                }else{
                     const message = "Not authorized";
                     return errorResponse(res,401,false,message);
                 }
-            });
+            }else{
+                const message = "Not authorized";
+                return errorResponse(res,401,false,message);
+            }
         } catch (error) {
             const message = "Not authorized";
             return errorResponse(res,401,false,message);
@@ -290,10 +311,8 @@ module.exports = {
      loginAdmin: async(req,res)=>{
 
         try {
-            // collect(req.body).dd()
            
             let checkLoginResponse = await userService.AdminLogin(req.body)
-            // collect(checkLoginResponse).dd();
             if(checkLoginResponse){
                 const token = jwt.sign({
                     email: checkLoginResponse.email,
