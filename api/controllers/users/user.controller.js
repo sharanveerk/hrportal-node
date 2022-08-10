@@ -182,8 +182,8 @@ module.exports = {
                         const message = "Something went wrong!"
                         return errorResponse(res,500,false,message)
                      }
-                     return res.status(201).json({
-                        statusCode:201,
+                     return res.status(200).json({
+                        statusCode:200,
                         success:true,
                         message:"User details have been created successfully."
                     })
@@ -246,9 +246,11 @@ module.exports = {
 
         try {
             let token = req.body.token
-            if(token){
-                return res.status(201).json({
-                    statusCode:201,
+            let userId = req.userData.userId;
+            let checkTokenResponse = await userService.checkToken(token,userId);
+            if(checkTokenResponse){
+                return res.status(200).json({
+                    statusCode:200,
                     success:true,
                     message: "Permission grented.",
                     token: token
@@ -265,6 +267,7 @@ module.exports = {
     logoutUser: async(req,res)=>{
 
         try {
+
             const authHeader = req.headers["authorization"];
             const token = authHeader.split(' ');
             // collect(token[1]).dd()
@@ -289,7 +292,7 @@ module.exports = {
                             statusCode:200,
                             success:true,
                             message: "You have been Logged Out",
-                            token: token
+                            // token: token
                         });   
                     }else{
                         const message = "Not authorized";
